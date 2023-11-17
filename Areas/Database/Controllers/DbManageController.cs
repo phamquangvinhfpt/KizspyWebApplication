@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.Data;
+using App.Models;
 using KizspyWebApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +16,14 @@ namespace KizspyWebApp.Controllers
     public class DbManageController : Controller
     {
         private readonly KizspyDbContext _context;
-        public DbManageController(KizspyDbContext dbContext)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public DbManageController(KizspyDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _context = dbContext;
+            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -44,6 +52,35 @@ namespace KizspyWebApp.Controllers
         {
             await _context.Database.MigrateAsync();
             StatusMessage = "Migrate database successfully";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> SeedDataAsync()
+        {
+            var rolenames = typeof(RoleName).GetFields().ToList();
+            foreach (var role in rolenames)
+            {
+                var rolename = role.GetRawConstantValue();
+                var exist = await _roleManager.FindByNameAsync(rolename.ToString());
+                if (exist == null)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(rolename.ToString()));
+                }
+            }
+
+            var useradmin = await _userManager.FindByNameAsync("admin");
+            if (useradmin == null)
+            {
+                useradmin = new AppUser
+                {
+                    UserName = "admin",
+                    Email = "admin@example.com",
+                    EmailConfirmed = true,
+                };
+                await _userManager.CreateAsync(useradmin, "123456");
+                await _userManager.AddToRoleAsync(useradmin, RoleName.Administrator);
+            }
+            StatusMessage = "Seed data successfully";
             return RedirectToAction(nameof(Index));
         }
     }
