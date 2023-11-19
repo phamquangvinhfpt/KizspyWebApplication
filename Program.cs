@@ -8,6 +8,7 @@ using App.Models;
 using App.Services;
 using KizspyWebApp.ErrorHandling;
 using KizspyWebApp.Models;
+using KizspyWebApp.Services;
 using MailKit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -99,6 +100,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
                     // .AddMicrosoftAccount()
                     ;
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

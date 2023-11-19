@@ -5,7 +5,11 @@ namespace KizspyWebApp.Models
 {
     public class KizspyDbContext : IdentityDbContext<AppUser>
 {
-    public KizspyDbContext(DbContextOptions<KizspyDbContext> options) : base(options)
+        public KizspyDbContext()
+        {
+        }
+
+        public KizspyDbContext(DbContextOptions<KizspyDbContext> options) : base(options)
     {
     }
 

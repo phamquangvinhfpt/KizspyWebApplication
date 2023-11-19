@@ -4,10 +4,6 @@
 }
 
 <h1>@ViewData["Title"].</h1>
-else
-{
-    <p>Model is null</p>
-}
 
 <form asp-controller="Account" asp-action="SendCode" asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal" role="form">
     <input asp-for="RememberMe" type="hidden" />

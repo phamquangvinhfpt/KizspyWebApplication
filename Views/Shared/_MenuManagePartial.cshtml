@@ -1,11 +1,23 @@
+@using Microsoft.AspNetCore.Identity
+@using App.Models
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 <div class="dropdown">
-  <button class="btn btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-    Manage
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-    <li><a class="dropdown-item" asp-action="Index" asp-controller="DbManage" asp-area="Database">Database</a></li>
-    <li><a class="dropdown-item" asp-action="Index" asp-controller="Role" asp-area="Identity">Quản lý Role</a></li>
-    <li><a class="dropdown-item" asp-action="Index" asp-controller="User" asp-area="Identity">Quản lý User</a></li>
-  </ul>
+    @if (SignInManager.IsSignedIn(User) && UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Administrator").Result)
+    {
+        <button class="btn btn-outline-danger dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Manage
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+            <li><a class="dropdown-item" asp-action="Index" asp-controller="DbManage" asp-area="Database">Database</a></li>
+
+            <li><a class="dropdown-item" asp-action="Index" asp-controller="Role" asp-area="Identity">Quản lý Role</a></li>
+            <li><a class="dropdown-item" asp-action="Index" asp-controller="User" asp-area="Identity">Quản lý User</a></li>
+            <li><a class="dropdown-item" asp-action="Index" asp-controller="Products">Quản lý Sản Phẩm</a></li>
+            <li><a class="dropdown-item" asp-action="Index" asp-controller="Categories">Quản lý doanh mục</a></li>
+        </ul>
+    }
 </div>
 
