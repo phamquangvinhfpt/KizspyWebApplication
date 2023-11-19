@@ -26,7 +26,16 @@ namespace KizspyWebApp.Models
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Cart>()
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var tableName = entityType.GetTableName();
+                if (tableName.StartsWith("AspNet"))
+                {
+                    entityType.SetTableName(tableName.Substring(6));
+                }
+            }
+
+            modelBuilder.Entity<Cart>()
     .HasOne(e => e.AppUser)
     .WithOne();
 

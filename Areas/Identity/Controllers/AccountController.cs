@@ -45,9 +45,14 @@ namespace App.Areas.Identity.Controllers
         // GET: /Account/Login
         [HttpGet("/login/")]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = "/")
         {
+            returnUrl ??= "/";
             ViewData["ReturnUrl"] = returnUrl;
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 

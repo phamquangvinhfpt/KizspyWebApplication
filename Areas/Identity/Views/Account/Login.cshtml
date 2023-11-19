@@ -10,6 +10,7 @@
 
 <h1>@ViewData["Title"].</h1>
 <div class="row">
+    @* check xem đã đăng nhập chưa *@
     <div class="col-md-8">
         <section>
             <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
