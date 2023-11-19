@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using KizspyWebApp.Models;
 using KizspyWebApp.Services;
 using KizspyWebApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using App.Data;
 
 namespace KizspyWebApp.Controllers
 {
+    [Authorize(Roles = RoleName.Administrator)]
     public class ProductsController : Controller
     {
         private readonly KizspyDbContext _context;
