@@ -491,7 +491,8 @@ namespace App.Areas.Identity.Controllers
             }
             var userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            var model = new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe };
+            return View(model);
         }
         //
         // POST: /Account/SendCode
@@ -557,11 +558,11 @@ namespace App.Areas.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
         {
-            model.ReturnUrl ??= Url.Content("~/");
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            //model.ReturnUrl ??= 
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);
+            //}
 
             // The following code protects for brute force attacks against the two factor codes.
             // If a user enters incorrect codes for a specified amount of time then the user account
@@ -569,7 +570,8 @@ namespace App.Areas.Identity.Controllers
             var result = await _signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
             if (result.Succeeded)
             {
-                return LocalRedirect(model.ReturnUrl);
+                //return redicrect to home
+                return RedirectToAction("Index", "Home", new {area = ""});
             }
             if (result.IsLockedOut)
             {
