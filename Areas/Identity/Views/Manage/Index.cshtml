@@ -111,24 +111,5 @@
                     </form>
                 }
         </dd>
-
-        <dt class="col-sm-4">Xác thực ứng dụng:</dt>
-        <dd class = "col-sm-6">
-            @if (Model.AuthenticatorKey == null)
-            {
-                <form asp-controller="Manage" asp-action="ResetAuthenticatorKey" method="post" class="form-horizontal" role="form">
-                    <button type="submit" class="btn btn-sm btn-primary">Phát sinh mã</button>
-                </form>
-            }
-            else
-            {
-                <text>Mã xác thực là: @Model.AuthenticatorKey</text>
-                <p>Nhập mã này khi yêu cầu xác thực 2 yếu tố</p>
-                <form asp-controller="Manage" asp-action="GenerateRecoveryCode" method="post" class="form-horizontal" role="form">
-                   <button type="submit" class="btn btn-sm btn-primary">Phát sinh mã phục hồi</button>
-                   <p>Mã phục hồi sử dụng để xác thực hai yếu tố</p>
-                </form>
-            }
-        </dd>
     </dl>
 </div>
