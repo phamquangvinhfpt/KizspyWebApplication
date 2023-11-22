@@ -28,7 +28,7 @@ namespace KizspyWebApp.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-              return _context.Products != null ? 
+            return _context.Products != null ? 
                           View(await _context.Products.ToListAsync()) :
                           Problem("Entity set 'KizspyDbContext.Products'  is null.");
         }
@@ -54,7 +54,13 @@ namespace KizspyWebApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewBag.Categories = _context.Categories.ToList();
+            ViewBag.Categories = _context.Categories
+                              .Select(x => new SelectListItem
+                              {
+                                  Value = x.Id.ToString(),
+                                  Text = x.CategoryName
+                              })
+                              .ToList();
             return View();
         }
 
@@ -80,8 +86,19 @@ namespace KizspyWebApp.Controllers
                     Status = product.Status,
                     Categories = product.Categories
                 };
-                _context.Add(Product);
-                await _context.SaveChangesAsync();
+                _context.Products.Add(Product);
+
+                foreach (var catId in product.CategoryIds)
+                {
+                    var productCategory = new ProductCategory
+                    {
+                        ProductId = product.Id,
+                        CategoryId = catId
+                    };
+
+                    _context.ProductCategories.Add(productCategory);
+                    }
+                    await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(product);

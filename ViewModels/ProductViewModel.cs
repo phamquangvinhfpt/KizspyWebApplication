@@ -11,6 +11,7 @@ namespace KizspyWebApp.ViewModels
         public string Description { get; set; }
         public IFormFile Image { get; set; }
         public bool Status { get; set; }
+        public List<Guid> CategoryIds { get; set; }
         public List<Category> Categories { get; set; } = new();
     }
 }

@@ -1,5 +1,4 @@
 ﻿@model KizspyWebApp.ViewModels.ProductViewModel
-@inject KizspyDbContext db
 @{
     ViewData["Title"] = "Create";
     //Call dbcontext to get all categories
@@ -36,6 +35,12 @@
                 <label asp-for="Image" class="control-label"></label>
                 <input asp-for="Image" type="file" class="form-control" />
                 <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Categories</label>
+
+                <select asp-for="CategoryIds" asp-items="ViewBag.Categories" multiple>
+                </select>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
