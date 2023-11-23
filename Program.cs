@@ -102,6 +102,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddScoped<IPhotoService, PhotoService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -114,13 +115,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets")),
-    RequestPath = "/assets"
-});
-app.UseGlobalErrorHandling();
+app.AddStaticFilesConfigs();
+//use enpoint to add Role/assets to url
 app.UseRouting();
 
 app.UseAuthentication();

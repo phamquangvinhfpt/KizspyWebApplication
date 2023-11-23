@@ -26,11 +26,32 @@ namespace KizspyWebApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            return _context.Products != null ? 
-                          View(await _context.Products.ToListAsync()) :
-                          Problem("Entity set 'KizspyDbContext.Products'  is null.");
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(ViewData["NameSortParm"] as string) ? "name_desc" : "";
+            ViewData["PriceSortParm"] = String.IsNullOrEmpty(ViewData["PriceSortParm"] as string) ? "price_desc" : "";
+            ViewData["QtySortParm"] = String.IsNullOrEmpty(ViewData["QtySortParm"] as string) ? "qty_desc" : "";
+            var products = from s in _context.Products
+						   select s;
+            switch (sortOrder)
+            {
+				case "name_desc":
+					products = products.OrderByDescending(s => s.Name);
+					break;
+				case "price_desc":
+					products = products.OrderByDescending(s => s.Price);
+					break;
+				case "qty_desc":
+					products = products.OrderByDescending(s => s.Qty);
+					break;
+				default:
+					products = products.OrderBy(s => s.Name);
+					break;
+			}
+            return View(await products.Include("Categories").AsNoTracking().ToListAsync());
+            //return _context.Products != null ? 
+            //              View(await _context.Products.Include("Categories").ToListAsync()) :
+            //              Problem("Entity set 'KizspyDbContext.Products'  is null.");
         }
 
         // GET: Products/Details/5
