@@ -8,6 +8,11 @@
 	var user = await userManager.GetUserAsync(User);
 	//if user is not logged in, set role_name to "Khách"
 	var role_name = user == null ? "Khách" : (await userManager.GetRolesAsync(user)).FirstOrDefault();
+	//if user is logged in, and role_name is null, set role_name to "Khách"
+if (User.Identity.IsAuthenticated && role_name == null)
+    {
+        role_name = "Khách";
+    }
 	var role = await roleManager.FindByNameAsync(role_name);
 }
 
