@@ -60,7 +60,7 @@ namespace App.Areas.Identity.Controllers
         // POST: /Account/Login
         [HttpPost("/login/")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -82,22 +82,26 @@ namespace App.Areas.Identity.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
+					//return LocalRedirect(returnUrl);
+					return Json(new { success = true, returnUrl = returnUrl });
+				}
                 if (result.RequiresTwoFactor)
                 {
-                   return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                }
+					//return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+					return Json(new { success = false, requiresTwoFactor = true, returnUrl = returnUrl, rememberMe = model.RememberMe });
+				}
                 
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning(2, "Tài khoản bị khóa");
-                    return View("Lockout");
+                    //return View("Lockout");
+                    return Json(new { success = false, isLockedOut = true, returnUrl = returnUrl });
                 }
                 else
                 {
                     ModelState.AddModelError("Không đăng nhập được.");
-                    return View(model);
+                    //return View(model);
+                    return Json(new { success = false, returnUrl = returnUrl });
                 }
             }
             return View(model);
