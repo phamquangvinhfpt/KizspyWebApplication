@@ -11,6 +11,7 @@ using KizspyWebApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using App.Data;
 using X.PagedList;
+using KizspyWebApp.Data;
 
 namespace KizspyWebApp.Controllers
 {
@@ -27,11 +28,20 @@ namespace KizspyWebApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
+            ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(ViewData["NameSortParm"] as string) ? "name_desc" : "";
             ViewData["PriceSortParm"] = String.IsNullOrEmpty(ViewData["PriceSortParm"] as string) ? "price_desc" : "";
             ViewData["QtySortParm"] = String.IsNullOrEmpty(ViewData["QtySortParm"] as string) ? "qty_desc" : "";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
             ViewData["CurrentFilter"] = searchString;
             var products = from s in _context.Products
 						   select s;
@@ -55,7 +65,8 @@ namespace KizspyWebApp.Controllers
 					products = products.OrderBy(s => s.Name);
 					break;
 			}
-            return View(await products.Include("Categories").AsNoTracking().ToListAsync());
+            int pageSize = 3;
+            return View(await PaginatedList<Product>.CreateAsync(products.Include("Categories").AsNoTracking(), pageNumber ?? 1, pageSize));
             //return _context.Products != null ? 
             //              View(await _context.Products.Include("Categories").ToListAsync()) :
             //              Problem("Entity set 'KizspyDbContext.Products'  is null.");
