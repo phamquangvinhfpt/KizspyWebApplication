@@ -10,10 +10,11 @@ using KizspyWebApp.Services;
 using KizspyWebApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using App.Data;
+using X.PagedList;
 
 namespace KizspyWebApp.Controllers
 {
-    [Authorize(Roles = RoleName.Administrator)]
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly KizspyDbContext _context;
@@ -26,13 +27,19 @@ namespace KizspyWebApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(ViewData["NameSortParm"] as string) ? "name_desc" : "";
             ViewData["PriceSortParm"] = String.IsNullOrEmpty(ViewData["PriceSortParm"] as string) ? "price_desc" : "";
             ViewData["QtySortParm"] = String.IsNullOrEmpty(ViewData["QtySortParm"] as string) ? "qty_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
             var products = from s in _context.Products
 						   select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(s => s.Name.Contains(searchString)
+                                                      || s.Description.Contains(searchString));
+            }
             switch (sortOrder)
             {
 				case "name_desc":
@@ -73,6 +80,7 @@ namespace KizspyWebApp.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         public IActionResult Create()
         {
             ViewBag.Categories = _context.Categories
@@ -90,6 +98,7 @@ namespace KizspyWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         public async Task<IActionResult> Create(ProductViewModel product)
         {
             if (ModelState.IsValid)
@@ -126,6 +135,7 @@ namespace KizspyWebApp.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.Products == null)
@@ -156,6 +166,7 @@ namespace KizspyWebApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Price,Qty,Description,Image,Status")] ProductViewModel product)
         {
@@ -200,6 +211,7 @@ namespace KizspyWebApp.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Products == null)
@@ -218,6 +230,7 @@ namespace KizspyWebApp.Controllers
         }
 
         // POST: Products/Delete/5
+        [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -239,6 +252,14 @@ namespace KizspyWebApp.Controllers
         private bool ProductExists(Guid id)
         {
           return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public IActionResult Paging(int page=1)
+        {
+            page=page<1?1:page;
+            int pageSize = 3;
+            var products = _context.Products.Include("Categories").ToPagedList(page,pageSize);
+            return View(products);
         }
     }
 }

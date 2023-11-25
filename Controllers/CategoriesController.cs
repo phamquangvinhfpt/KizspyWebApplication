@@ -12,7 +12,7 @@ using App.Data;
 
 namespace KizspyWebApp.Controllers
 {
-    [Authorize(Roles = RoleName.Administrator)]
+    [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
     public class CategoriesController : Controller
     {
         private readonly KizspyDbContext _context;

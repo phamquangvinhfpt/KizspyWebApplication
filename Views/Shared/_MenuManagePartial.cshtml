@@ -1,3 +1,4 @@
+@using App.Data;
 @using Microsoft.AspNetCore.Identity
 @using App.Models
 
@@ -42,7 +43,7 @@ if (User.Identity.IsAuthenticated && role_name == null)
 		<!--begin::Menu separator-->
 		<div class="separator my-2"></div>
 		<!--end::Menu separator-->
-		@if (SignInManager.IsSignedIn(User) && userManager.IsInRoleAsync(userManager.GetUserAsync(User).Result, "Administrator").Result)
+		@if (SignInManager.IsSignedIn(User) && (User.IsInRole(RoleName.Administrator) || User.IsInRole(RoleName.Editor)))
 		{
 			<div class="menu-item px-5 show menu-dropdown" data-kt-menu-trigger="hover" data-kt-menu-placement="left-start">
 				<a href="#" class="menu-link px-5">
