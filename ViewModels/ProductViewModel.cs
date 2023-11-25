@@ -6,7 +6,7 @@ namespace KizspyWebApp.ViewModels
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
-        public string Price { get; set; } = null!;
+        public double Price { get; set; }
         public int Qty { get; set; }
         public string Description { get; set; }
         public IFormFile Image { get; set; }

@@ -1,4 +1,10 @@
-﻿@using KizspyWebApp.Models;
+﻿@using App.Data;
+@using App.Models;
+@using KizspyWebApp.Models;
+@using Microsoft.AspNetCore.Identity;
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> userManager
 @model IEnumerable<Product>
 
 @{
@@ -7,9 +13,18 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<form asp-action="Index" method="get" class="form-inline">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" />
+            |
+            <a asp-action="Index">Back to Full List</a> |
+            <a asp-action="Create">Create New</a>
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -17,10 +32,10 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]">@Html.DisplayNameFor(model => model.Price)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Qty)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["QtySortParm"]">@Html.DisplayNameFor(model => model.Qty)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
@@ -28,9 +43,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Categories)
             </th>
-            <th>
+            @* <th>
                 @Html.DisplayNameFor(model => model.Image)
-            </th>
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
@@ -57,19 +72,26 @@
                     @* display categories name *@
                     @foreach (var category in item.Categories)
                     {
-                        @category.CategoryName
+                        @category.CategoryName <br />
                     }
                 </td>
-                <td>
+                @* <td>
                     <img class="card-img-top" src="@item.Image" width="100px" height="100px" alt="Card image cap">
-                </td>
+                </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @* Role admin and Manager can edit and delete *@
+                    @if (SignInManager.IsSignedIn(User) && (User.IsInRole(RoleName.Administrator) || User.IsInRole(RoleName.Editor)))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (SignInManager.IsSignedIn(User) && (User.IsInRole(RoleName.Administrator) || User.IsInRole(RoleName.Editor)))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
                 </td>
             </tr>
         }

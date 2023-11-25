@@ -29,17 +29,20 @@ namespace App.Areas.Identity.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<AccountController> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AccountController(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _roleManager = roleManager;
         }
 
         // GET: /Account/Login
@@ -130,7 +133,7 @@ namespace App.Areas.Identity.Controllers
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -139,7 +142,8 @@ namespace App.Areas.Identity.Controllers
             {
                 var user = new AppUser { UserName = model.UserName, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
-
+                //Add role to user using RoleClaim
+                await _userManager.AddToRoleAsync(user, "Member");
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Đã tạo user mới.");
@@ -157,15 +161,18 @@ namespace App.Areas.Identity.Controllers
                                   code = code},
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(model.Email, 
+                    await _emailSender.SendEmailAsync(model.Email,
                         "Xác nhận địa chỉ email",
                         @$"Bạn đã đăng ký tài khoản trên RazorWeb, 
                            hãy <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>bấm vào đây</a> 
                            để kích hoạt tài khoản.");
+                    //return callbackUrl to client
+                    //return Json(new { success = true, returnUrl = returnUrl, callbackUrl = callbackUrl });
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return LocalRedirect(Url.Action(nameof(RegisterConfirmation)));
+                        //return LocalRedirect(Url.Action(nameof(RegisterConfirmation)));
+                        return Json(new { success = true, returnUrl = Url.Action(nameof(RegisterConfirmation)) });
                     }
                     else
                     {
@@ -176,6 +183,7 @@ namespace App.Areas.Identity.Controllers
                 }
 
                 ModelState.AddModelError(result);
+                return Json(new { success = false, message = result.Errors.FirstOrDefault().Description });
             }
 
             // If we got this far, something failed, redisplay form
