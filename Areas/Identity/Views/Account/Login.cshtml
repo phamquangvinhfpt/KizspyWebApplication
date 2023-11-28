@@ -1,6 +1,9 @@
 ﻿@using System.Collections.Generic
+@using App.Areas.Identity.Models.AccountViewModels;
+@using App.Models;
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity;
 @model LoginViewModel
 @inject SignInManager<AppUser> SignInManager
 
@@ -25,7 +28,7 @@ License: For each use you must have a valid license purchased only from above li
 <!--begin::Head-->
 <head>
 	<base href="../../../">
-	<title>Metronic - the world's #1 selling Bootstrap Admin Theme Ecosystem for HTML, Vue, React, Angular &amp; Laravel by Keenthemes</title>
+	<title>Kizspy - Sign in</title>
 	<meta name="description" content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 94,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue &amp; Laravel versions. Grab your copy now and get life-time updates for free." />
 	<meta name="keywords" content="Metronic, bootstrap, bootstrap 5, Angular, VueJs, React, Laravel, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -95,7 +98,7 @@ License: For each use you must have a valid license purchased only from above li
 								<label asp-for="Password" class="form-label fw-bolder text-dark fs-6 mb-0">Password</label>
 								<!--end::Label-->
 								<!--begin::Link-->
-								<a href="../../demo2/dist/authentication/flows/dark/password-reset.html" class="link-primary fs-6 fw-bolder">Forgot Password ?</a>
+								<a asp-action="ForgotPassword" class="link-primary fs-6 fw-bolder">Forgot Password ?</a>
 								<!--end::Link-->
 							</div>
 							<!--end::Wrapper-->
