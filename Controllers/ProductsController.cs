@@ -15,7 +15,7 @@ using KizspyWebApp.Data;
 
 namespace KizspyWebApp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ProductsController : Controller
     {
         private readonly KizspyDbContext _context;
@@ -28,48 +28,18 @@ namespace KizspyWebApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<IActionResult> Index()
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(ViewData["NameSortParm"] as string) ? "name_desc" : "";
-            ViewData["PriceSortParm"] = String.IsNullOrEmpty(ViewData["PriceSortParm"] as string) ? "price_desc" : "";
-            ViewData["QtySortParm"] = String.IsNullOrEmpty(ViewData["QtySortParm"] as string) ? "qty_desc" : "";
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-            ViewData["CurrentFilter"] = searchString;
-            var products = from s in _context.Products
-						   select s;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                products = products.Where(s => s.Name.Contains(searchString)
-                                                      || s.Description.Contains(searchString));
-            }
-            switch (sortOrder)
-            {
-				case "name_desc":
-					products = products.OrderByDescending(s => s.Name);
-					break;
-				case "price_desc":
-					products = products.OrderByDescending(s => s.Price);
-					break;
-				case "qty_desc":
-					products = products.OrderByDescending(s => s.Qty);
-					break;
-				default:
-					products = products.OrderBy(s => s.Name);
-					break;
-			}
-            int pageSize = 3;
-            return View(await PaginatedList<Product>.CreateAsync(products.Include("Categories").AsNoTracking(), pageNumber ?? 1, pageSize));
-            //return _context.Products != null ? 
-            //              View(await _context.Products.Include("Categories").ToListAsync()) :
-            //              Problem("Entity set 'KizspyDbContext.Products'  is null.");
+            return _context.Products != null ?
+                          View(await _context.Products.Include("Categories").ToListAsync()) :
+                          Problem("Entity set 'KizspyDbContext.Products'  is null.");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> getProducts()
+        {
+            var products = await _context.Products.Include("Categories").ToListAsync();
+            return Json(products);
         }
 
         // GET: Products/Details/5
@@ -243,21 +213,24 @@ namespace KizspyWebApp.Controllers
         // POST: Products/Delete/5
         [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.Products == null)
             {
-                return Problem("Entity set 'KizspyDbContext.Products'  is null.");
+                return Json(new { success = false, message = "Entity set 'KizspyDbContext.Products'  is null." });
             }
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
                 _context.Products.Remove(product);
+            } else
+            {
+                return Json(new { success = false, message = "Product not found." });
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = "Delete success." });
         }
 
         private bool ProductExists(Guid id)

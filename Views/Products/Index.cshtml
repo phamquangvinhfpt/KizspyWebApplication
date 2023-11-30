@@ -6,428 +6,255 @@
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> userManager
-@model PaginatedList<Product>
+@model IEnumerable<Product>
 
 @{
     ViewData["Title"] = "Index";
 }
-
-<!--begin::Wrapper-->
-<div class="d-flex flex-stack mb-5">
-    <!--begin::Search-->
-    <div class="d-flex align-items-center position-relative my-1">
-        <span class="svg-icon svg-icon-2">...</span>
-        <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Customers" />
-    </div>
-    <!--end::Search-->
-    <!--begin::Toolbar-->
-    <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
-        <!--begin::Filter-->
-        <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="tooltip" title="Coming Soon">
-            <span class="svg-icon svg-icon-2">...</span>
-            Filter
-        </button>
-        <!--end::Filter-->
-        <!--begin::Add customer-->
-        <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" title="Coming Soon">
-            <span class="svg-icon svg-icon-2">...</span>
-            Add Customer
-        </button>
-        <!--end::Add customer-->
-    </div>
-    <!--end::Toolbar-->
-    <!--begin::Group actions-->
-    <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
-        <div class="fw-bolder me-5">
-            <span class="me-2" data-kt-docs-table-select="selected_count"></span> Selected
-        </div>
-
-        <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" title="Coming Soon">
-            Selection Action
-        </button>
-    </div>
-    <!--end::Group actions-->
-</div>
-<!--end::Wrapper-->
-<!--begin::Datatable-->
-<table id="kt_datatable_example_1" class="table align-middle table-row-dashed fs-6 gy-5">
-    <thead>
-        <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-            <th class="w-10px pe-2">
-                <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                    <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+<link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
+<div class="card p-3">
+    <div class="card-body pt-0">
+        <div class="d-flex flex-stack mb-5">
+            <!--begin::Search-->
+            <div class="d-flex align-items-center position-relative my-1">
+                <span class="svg-icon svg-icon-primary svg-icon-2x">
+                    <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/General/Search.svg-->
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24" />
+                            <path d="M14.2928932,16.7071068 C13.9023689,16.3165825 13.9023689,15.6834175 14.2928932,15.2928932 C14.6834175,14.9023689 15.3165825,14.9023689 15.7071068,15.2928932 L19.7071068,19.2928932 C20.0976311,19.6834175 20.0976311,20.3165825 19.7071068,20.7071068 C19.3165825,21.0976311 18.6834175,21.0976311 18.2928932,20.7071068 L14.2928932,16.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                            <path d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z" fill="#000000" fill-rule="nonzero" />
+                        </g>
+                    </svg><!--end::Svg Icon-->
+                </span>
+                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Customers" />
+            </div>
+            <!--end::Search-->
+            <!--begin::Toolbar-->
+            <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
+                <!--begin::Filter-->
+                <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="tooltip">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x">
+                        <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/Text/Filter.svg-->
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <path d="M5,4 L19,4 C19.2761424,4 19.5,4.22385763 19.5,4.5 C19.5,4.60818511 19.4649111,4.71345191 19.4,4.8 L14,12 L14,20.190983 C14,20.4671254 13.7761424,20.690983 13.5,20.690983 C13.4223775,20.690983 13.3458209,20.6729105 13.2763932,20.6381966 L10,19 L10,12 L4.6,4.8 C4.43431458,4.5790861 4.4790861,4.26568542 4.7,4.1 C4.78654809,4.03508894 4.89181489,4 5,4 Z" fill="#000000" />
+                            </g>
+                        </svg><!--end::Svg Icon-->
+                    </span>
+                    Filter
+                </button>
+                <!--end::Filter-->
+                <!--begin::Add customer-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="tooltip">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x">
+                        <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/Navigation/Plus.svg-->
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect fill="#000000" x="4" y="11" width="16" height="2" rx="1" />
+                                <rect fill="#000000" opacity="0.3" transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) " x="4" y="11" width="16" height="2" rx="1" />
+                            </g>
+                        </svg><!--end::Svg Icon-->
+                    </span>
+                    Add Product
+                </button>
+                <!--end::Add customer-->
+            </div>
+            <!--end::Toolbar-->
+            <!--begin::Group actions-->
+            <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
+                <div class="fw-bolder me-5">
+                    <span class="me-2" data-kt-docs-table-select="selected_count"></span> Selected
                 </div>
-            </th>
-            <th>Customer Name</th>
-            <th>Email</th>
-            <th>Company</th>
-            <th>Payment Method</th>
-            <th>Created Date</th>
-            <th class="text-end min-w-100px">Actions</th>
-        </tr>
-    </thead>
-    <tbody class="text-gray-600 fw-bold">
-    </tbody>
-</table>
-<!--end::Datatable-->
-@* script *@
-@section Scripts{
-    <script>
-        "use strict";
 
-        // Class definition
-        var KTDatatablesServerSide = function () {
-            // Shared variables
-            var table;
-            var dt;
-            var filterPayment;
-
-            // Private functions
-            var initDatatable = function () {
-                dt = $("#kt_datatable_example_1").DataTable({
-                    responsive: true,
-                    searchDelay: 500,
-                    processing: true,
-                    serverSide: true,
-                    order: [[5, 'desc']],
-                    stateSave: true,
-                    select: {
-                        style: 'os',
-                        selector: 'td:first-child',
-                        className: 'row-selected'
-                    },
-                    ajax: {
-                        url: "/Products",
-                    },
-                    columns: [
-                        { data: 'RecordID' },
-                        { data: 'Name' },
-                        { data: 'Email' },
-                        { data: 'Company' },
-                        { data: 'CreditCardNumber' },
-                        { data: 'Datetime' },
-                        { data: null },
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            orderable: false,
-                            render: function (data) {
-                                return `
-                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="${data}" />
-                                    </div>`;
-                            }
-                        },
-                        {
-                            targets: 4,
-                            render: function (data, type, row) {
-                                return `<img src="${hostUrl}media/svg/card-logos/${row.CreditCardType}.svg" class="w-35px me-3" alt="${row.CreditCardType}">` + data;
-                            }
-                        },
-                        {
-                            targets: -1,
-                            data: null,
-                            orderable: false,
-                            className: 'text-end',
-                            render: function (data, type, row) {
-                                return `
-                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-                                        Actions
-                                        <span class="svg-icon svg-icon-5 m-0">
-                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                    <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                                                    <path d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)"></path>
-                                                </g>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                    <!--begin::Menu-->
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
-                                                Edit
-                                            </a>
-                                        </div>
-                                        <!--end::Menu item-->
-
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
-                                                Delete
-                                            </a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                    </div>
-                                    <!--end::Menu-->
-                                `;
-                            },
-                        },
-                    ],
-                    // Add data-filter attribute
-                    createdRow: function (row, data, dataIndex) {
-                        $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
+                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" title="Coming Soon">
+                    Selection Action
+                </button>
+            </div>
+            <!--end::Group actions-->
+        </div>
+        <table id="example" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Qty)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Image)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categories)
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script>
+    var table = new DataTable('#example', {
+        ajax: {
+            url: '/Products/GetProducts',
+            type: 'Post',
+            dataType: 'json',
+            dataSrc: ''
+        },
+        columns: [
+            { data: 'id',
+              visible: false,
+              searchable: false
+            },
+            { data: 'name' },
+            { data: 'price' },
+            { data: 'qty' },
+            {
+                data: 'description',
+                render: function (data) {
+                    return '<div class="rounded border d-flex flex-column p-10">' +
+                        '<label for="" class="form-label">Description</label>' +
+                        '<textarea class="form-control" data-kt-autosize="true" readonly>' + data + '</textarea>' +
+                        '</div>';
+                }
+            },
+            {
+                data: 'image',
+                render: function (data) {
+                    return '<div class="card  overlay overflow-hidden">' +
+                        '<div class="card-body p-0">' +
+                        '<div class="overlay-wrapper">' +
+                        '<img src="' + data + '" alt="" width="150px" height="100px" class="w-100 rounded"/>' +
+                        '</div>' +
+                        '<div class="overlay-layer bg-dark bg-opacity-25">' +
+                        '<a href="#" class="btn btn-primary btn-shadow btn-sm">Explore</a>' +
+                        '<a href="#" class="btn btn-light-primary btn-shadow btn-sm ms-2">Purchase</a>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                }
+            },
+            {
+                data: 'status',
+                render: function (data){
+                    if (data) {
+                        return '<span class="badge badge-light-success">Active</span>';
                     }
-                });
-
-                table = dt.$;
-
-                // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-                dt.on('draw', function () {
-                    initToggleToolbar();
-                    toggleToolbars();
-                    handleDeleteRows();
-                    KTMenu.createInstances();
-                });
-            }
-
-            // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
-            var handleSearchDatatable = function () {
-                const filterSearch = document.querySelector('[data-kt-docs-table-filter="search"]');
-                filterSearch.addEventListener('keyup', function (e) {
-                    dt.search(e.target.value).draw();
-                });
-            }
-
-            // Filter Datatable
-            var handleFilterDatatable = () => {
-                // Select filter options
-                filterPayment = document.querySelectorAll('[data-kt-docs-table-filter="payment_type"] [name="payment_type"]');
-                const filterButton = document.querySelector('[data-kt-docs-table-filter="filter"]');
-
-                // Filter datatable on submit
-                filterButton.addEventListener('click', function () {
-                    // Get filter values
-                    let paymentValue = '';
-
-                    // Get payment value
-                    filterPayment.forEach(r => {
-                        if (r.checked) {
-                            paymentValue = r.value;
-                        }
-
-                        // Reset payment value if "All" is selected
-                        if (paymentValue === 'all') {
-                            paymentValue = '';
-                        }
+                    else {
+                        return '<span class="badge badge-light-danger">Inactive</span>';
+                    }
+                }
+            },
+            {
+                data: 'categories',
+                render: function (data) {
+                    var html = '';
+                    data.forEach(function (item) {
+                        html += '<span class="badge badge-light-primary">' + item.categoryName + '</span>';
                     });
-
-                    // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
-                    dt.search(paymentValue).draw();
-                });
+                return html;
+                }
+            },
+            {
+                data: 'id',
+                render: function (data) {
+                    return '<a href="/Products/Edit/' + data + '" class="btn btn-sm btn-clean btn-icon" title="Edit details">' +
+                        '<span class="svg-icon svg-icon-3">' +
+                        '<i class="fas fa-edit"></i>' +
+                        '</span>' +
+                        '</a>' +
+                        '<a href="/Products/Delete/' + data + '" onclick="deleteProduct(event)" class="btn btn-sm btn-clean btn-icon" title="Delete">' +
+                        '<span class="svg-icon svg-icon-3">' +
+                        '<i class="fas fa-trash"></i>' +
+                        '</span>' +
+                        '</a>';
+                }
             }
+        ]
+    });
 
-            // Delete customer
-            var handleDeleteRows = () => {
-                // Select all delete buttons
-                const deleteButtons = document.querySelectorAll('[data-kt-docs-table-filter="delete_row"]');
-
-                deleteButtons.forEach(d => {
-                    // Delete button on click
-                    d.addEventListener('click', function (e) {
-                        e.preventDefault();
-
-                        // Select parent row
-                        const parent = e.target.closest('tr');
-
-                        // Get customer name
-                        const customerName = parent.querySelectorAll('td')[1].innerText;
-
-                        // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
-                        Swal.fire({
-                            text: "Are you sure you want to delete " + customerName + "?",
-                            icon: "warning",
-                            showCancelButton: true,
-                            buttonsStyling: false,
-                            confirmButtonText: "Yes, delete!",
-                            cancelButtonText: "No, cancel",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-danger",
-                                cancelButton: "btn fw-bold btn-active-light-primary"
-                            }
-                        }).then(function (result) {
-                            if (result.value) {
-                                // Simulate delete request -- for demo purpose only
-                                Swal.fire({
-                                    text: "Deleting " + customerName,
-                                    icon: "info",
-                                    buttonsStyling: false,
-                                    showConfirmButton: false,
-                                    timer: 2000
-                                }).then(function () {
-                                    Swal.fire({
-                                        text: "You have deleted " + customerName + "!.",
-                                        icon: "success",
-                                        buttonsStyling: false,
-                                        confirmButtonText: "Ok, got it!",
-                                        customClass: {
-                                            confirmButton: "btn fw-bold btn-primary",
-                                        }
-                                    }).then(function () {
-                                        // delete row data from server and re-draw datatable
-                                        dt.draw();
-                                    });
-                                });
-                            } else if (result.dismiss === 'cancel') {
-                                Swal.fire({
-                                    text: customerName + " was not deleted.",
-                                    icon: "error",
-                                    buttonsStyling: false,
-                                    confirmButtonText: "Ok, got it!",
-                                    customClass: {
-                                        confirmButton: "btn fw-bold btn-primary",
-                                    }
-                                });
-                            }
-                        });
-                    })
-                });
-            }
-
-            // Reset Filter
-            var handleResetForm = () => {
-                // Select reset button
-                const resetButton = document.querySelector('[data-kt-docs-table-filter="reset"]');
-
-                // Reset datatable
-                resetButton.addEventListener('click', function () {
-                    // Reset payment type
-                    filterPayment[0].checked = true;
-
-                    // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
-                    dt.search('').draw();
-                });
-            }
-
-            // Init toggle toolbar
-            var initToggleToolbar = function () {
-                // Toggle selected action toolbar
-                // Select all checkboxes
-                const container = document.querySelector('#kt_datatable_example_1');
-                const checkboxes = container.querySelectorAll('[type="checkbox"]');
-
-                // Select elements
-                const deleteSelected = document.querySelector('[data-kt-docs-table-select="delete_selected"]');
-
-                // Toggle delete selected toolbar
-                checkboxes.forEach(c => {
-                    // Checkbox on click event
-                    c.addEventListener('click', function () {
-                        setTimeout(function () {
-                            toggleToolbars();
-                        }, 50);
-                    });
-                });
-
-                // Deleted selected rows
-                deleteSelected.addEventListener('click', function () {
-                    // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
-                    Swal.fire({
-                        text: "Are you sure you want to delete selected customers?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        buttonsStyling: false,
-                        showLoaderOnConfirm: true,
-                        confirmButtonText: "Yes, delete!",
-                        cancelButtonText: "No, cancel",
-                        customClass: {
-                            confirmButton: "btn fw-bold btn-danger",
-                            cancelButton: "btn fw-bold btn-active-light-primary"
-                        },
-                    }).then(function (result) {
-                        if (result.value) {
-                            // Simulate delete request -- for demo purpose only
+    //delete function
+    function deleteProduct(event) {
+        event.preventDefault();
+        //get id from row
+        var id = event.currentTarget.getAttribute('href').split('/').pop();
+        //swal alert to confirm delete
+        swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!"
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                //call delete action
+                $.ajax({
+                    url: '/Products/Delete/' + id,
+                    type: 'Post',
+                    success: function (data) {
+                        if (data.success) {
                             Swal.fire({
-                                text: "Deleting selected customers",
-                                icon: "info",
+                                title: "Deleted!",
+                                text: data.message,
+                                icon: "success",
                                 buttonsStyling: false,
-                                showConfirmButton: false,
-                                timer: 2000
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-light-primary"
+                                }
                             }).then(function () {
-                                Swal.fire({
-                                    text: "You have deleted all selected customers!.",
-                                    icon: "success",
-                                    buttonsStyling: false,
-                                    confirmButtonText: "Ok, got it!",
-                                    customClass: {
-                                        confirmButton: "btn fw-bold btn-primary",
-                                    }
-                                }).then(function () {
-                                    // delete row data from server and re-draw datatable
-                                    dt.draw();
-                                });
-
-                                // Remove header checked box
-                                const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
-                                headerCheckbox.checked = false;
+                                window.location.href = '/Products/Index';
                             });
-                        } else if (result.dismiss === 'cancel') {
+                        }
+                        else {
                             Swal.fire({
-                                text: "Selected customers was not deleted.",
+                                title: "Error!",
+                                text: data.message,
                                 icon: "error",
                                 buttonsStyling: false,
                                 confirmButtonText: "Ok, got it!",
                                 customClass: {
-                                    confirmButton: "btn fw-bold btn-primary",
+                                    confirmButton: "btn fw-bold btn-light-primary"
                                 }
                             });
                         }
-                    });
-                });
-            }
-
-            // Toggle toolbars
-            var toggleToolbars = function () {
-                // Define variables
-                const container = document.querySelector('#kt_datatable_example_1');
-                const toolbarBase = document.querySelector('[data-kt-docs-table-toolbar="base"]');
-                const toolbarSelected = document.querySelector('[data-kt-docs-table-toolbar="selected"]');
-                const selectedCount = document.querySelector('[data-kt-docs-table-select="selected_count"]');
-
-                // Select refreshed checkbox DOM elements
-                const allCheckboxes = container.querySelectorAll('tbody [type="checkbox"]');
-
-                // Detect checkboxes state & count
-                let checkedState = false;
-                let count = 0;
-
-                // Count checked boxes
-                allCheckboxes.forEach(c => {
-                    if (c.checked) {
-                        checkedState = true;
-                        count++;
                     }
                 });
-
-                // Toggle toolbars
-                if (checkedState) {
-                    selectedCount.innerHTML = count;
-                    toolbarBase.classList.add('d-none');
-                    toolbarSelected.classList.remove('d-none');
-                } else {
-                    toolbarBase.classList.remove('d-none');
-                    toolbarSelected.classList.add('d-none');
-                }
             }
-
-            // Public methods
-            return {
-                init: function () {
-                    initDatatable();
-                    handleSearchDatatable();
-                    initToggleToolbar();
-                    handleFilterDatatable();
-                    handleDeleteRows();
-                    handleResetForm();
-                }
-            }
-        }();
-
-        // On document ready
-        KTUtil.onDOMContentLoaded(function () {
-            KTDatatablesServerSide.init();
         });
-    </script>
-}
+    }
+
+    //search function
+    $('[data-kt-docs-table-filter="search"]').on('keyup', function () {
+        table.search($(this).val()).draw();
+    });
+
+    //filter function, click show categories button to show filter
+$('[data-kt-docs-table-filter="filter"]').on('click', function () {
+        $(this).addClass('active');
+        $('[data-kt-docs-table-filter="filter"]').not(this).removeClass('active');
+        $('[data-kt-docs-table-filter="form"]').addClass('d-none');
+        $('[data-kt-docs-table-filter="form"]').not('[data-kt-docs-table-filter="form"][data-kt-docs-table-filter="form=' + $(this).attr('data-kt-docs-table-filter') + '"]').removeClass('d-none');
+    });
+
+//filter function, click filter button to filter
+$('[data-kt-docs-table-filter="filter"]').on('click', function () {
+        var filter = $(this).attr('data-kt-docs-table-filter');
+        var value = $(this).attr('data-kt-docs-table-filter-value');
+        table.column(filter + ':name').search(value).draw();
+    });
+</script>

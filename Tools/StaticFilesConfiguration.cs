@@ -107,7 +107,14 @@ namespace KizspyWebApp.ErrorHandling
 				RequestPath = new PathString("/Products/Details")
 			});
 
-			app.UseStaticFiles(new StaticFileOptions()
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+                RequestPath = new PathString("/Products/Delete")
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
 			{
 				FileProvider = new PhysicalFileProvider(
 						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),

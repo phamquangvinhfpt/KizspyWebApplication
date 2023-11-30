@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using App.Models;
 using App.Services;
@@ -52,8 +53,10 @@ builder.Services.AddDbContext<KizspyDbContext>(options =>
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<KizspyDbContext>()
     .AddDefaultTokenProviders();
-                // Truy cập IdentityOptions
-            builder.Services.Configure<IdentityOptions> (options => {
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+// Truy cập IdentityOptions
+builder.Services.Configure<IdentityOptions> (options => {
                 // Thiết lập về Password
                 options.Password.RequireDigit = false; // Không bắt phải có số
                 options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
