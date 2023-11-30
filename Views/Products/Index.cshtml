@@ -49,7 +49,7 @@
                 </button>
                 <!--end::Filter-->
                 <!--begin::Add customer-->
-                <button type="button" class="btn btn-primary" data-bs-toggle="tooltip">
+                <a asp-action="Create" asp-controller="Products" type="button" class="btn btn-primary" data-bs-toggle="tooltip">
                     <span class="svg-icon svg-icon-primary svg-icon-2x">
                         <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/Navigation/Plus.svg-->
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -60,7 +60,7 @@
                         </svg><!--end::Svg Icon-->
                     </span>
                     Add Product
-                </button>
+                </a>
                 <!--end::Add customer-->
             </div>
             <!--end::Toolbar-->
@@ -134,14 +134,14 @@
             },
             {
                 data: 'image',
-                render: function (data) {
+                render: function (data, type, row) {
                     return '<div class="card  overlay overflow-hidden">' +
                         '<div class="card-body p-0">' +
                         '<div class="overlay-wrapper">' +
                         '<img src="' + data + '" alt="" width="150px" height="100px" class="w-100 rounded"/>' +
                         '</div>' +
                         '<div class="overlay-layer bg-dark bg-opacity-25">' +
-                        '<a href="#" class="btn btn-primary btn-shadow btn-sm">Explore</a>' +
+                        '<a href="/Products/Details/' + row.id + '" class="btn btn-primary btn-shadow btn-sm">Explore</a>' +
                         '<a href="#" class="btn btn-light-primary btn-shadow btn-sm ms-2">Purchase</a>' +
                         '</div>' +
                         '</div>' +

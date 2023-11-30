@@ -14,5 +14,7 @@ namespace App.Models
           // [Required]       
           [DataType(DataType.Date)]
           public DateTime? BirthDate { get; set; }
+          public string? Casso_Code { get; set; }
+          public decimal? Amount { get; set; } = 0;
     }
 }

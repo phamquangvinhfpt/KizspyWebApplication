@@ -94,9 +94,12 @@ namespace KizspyWebApp.Controllers
                     Qty = product.Qty,
                     Description = product.Description,
                     Image = result.Url.ToString(),
-                    Status = product.Status,
                     Categories = product.Categories
                 };
+                if (Product.Qty > 0)
+                {
+                    Product.Status = true;
+                }
                 _context.Products.Add(Product);
 
                 foreach (var catId in product.CategoryIds)
@@ -137,9 +140,19 @@ namespace KizspyWebApp.Controllers
                 Qty = product.Qty,
                 Description = product.Description,
                 Image = null,
-                Status = product.Status,
-                Categories = product.Categories
+                Status = product.Status
             };
+            //Get all categories
+            var categories = await _context.Categories.ToListAsync();
+            //Get all categories for this product
+            var productCategories = await _context.ProductCategories.Where(x => x.ProductId == id).ToListAsync();
+            //viewbag
+            ViewBag.Categories = categories.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.CategoryName,
+                Selected = productCategories.Any(y => y.CategoryId == x.Id)
+            }).ToList();
             return View(productViewModel);
         }
 
@@ -149,7 +162,7 @@ namespace KizspyWebApp.Controllers
         [HttpPost]
         [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Price,Qty,Description,Image,Status")] ProductViewModel product)
+        public async Task<IActionResult> Edit(Guid id, ProductViewModel product)
         {
             if (id != product.Id)
             {
@@ -169,10 +182,27 @@ namespace KizspyWebApp.Controllers
                         Qty = product.Qty,
                         Description = product.Description,
                         Image = result.Url.ToString(),
-                        Status = product.Status,
                         Categories = product.Categories
                     };
+                    if (Product.Qty > 0)
+                    {
+                        Product.Status = true;
+                    }
+
                     _context.Update(Product);
+
+                    //Update productcategories
+                    var productCategories = await _context.ProductCategories.Where(x => x.ProductId == id).ToListAsync();
+                    _context.ProductCategories.RemoveRange(productCategories);
+                    foreach (var catId in product.CategoryIds)
+                    {
+                        var productCategory = new ProductCategory
+                        {
+                            ProductId = product.Id,
+                            CategoryId = catId
+                        };
+                        _context.ProductCategories.Add(productCategory);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

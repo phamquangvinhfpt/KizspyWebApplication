@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
+using App.Data;
 using App.ExtendMethods;
 using App.Models;
 using App.Utilities;
@@ -141,10 +142,10 @@ namespace App.Areas.Identity.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = model.UserName, Email = model.Email };
+                var user = new AppUser { UserName = model.UserName, Email = model.Email, Casso_Code = generateRandomString() };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 //Add role to user using RoleClaim
-                await _userManager.AddToRoleAsync(user, "Member");
+                await _userManager.AddToRoleAsync(user, RoleName.Member);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Đã tạo user mới.");
@@ -695,8 +696,13 @@ namespace App.Areas.Identity.Controllers
             return View();
         }
 
-
-
-    
-  }
+        private string generateRandomString()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            //return a new string start with Kizspy and 6-10 random chars
+            return "Kizspy " + new string(Enumerable.Repeat(chars, random.Next(6, 10))
+                               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+    }
 }

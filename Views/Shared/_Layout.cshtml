@@ -1,4 +1,15 @@
-﻿
+﻿@using App.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@{
+	var user = await UserManager.GetUserAsync(User);
+	//Math floor to get the integer part of the number
+	decimal? userAmount = user.Amount;
+	decimal balance = userAmount.HasValue ? Math.Floor(userAmount.Value) : 0m;
+	string currentAction = ViewContext.RouteData.Values["action"].ToString();
+	string currentController = ViewContext.RouteData.Values["controller"].ToString();
+}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -184,13 +195,13 @@
 								<!--begin::Wrapper-->
 								<div class="me-4">
 									<!--begin::Menu-->
-									<a href="#" class="btn btn-bg-white btn-active-color-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">
-									Nạp tiền</a
+									<a asp-action="Payment" asp-controller="Home" class="btn btn-bg-white btn-active-color-primary">
+									Nạp tiền</a>
 									<!--end::Menu-->
 								</div>
 								<!--end::Wrapper-->
 								<!--begin::Button-->
-								<a href="#" class="btn btn-bg-white btn-active-color-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">Số dư: 0 vnd</a>
+								<a asp-action=@currentAction asp-controller=@currentController class="btn btn-bg-white btn-active-color-primary ">Số dư: @balance vnđ</a>
 								<!--end::Button-->
 							</div>
 							}
