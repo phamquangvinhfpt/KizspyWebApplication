@@ -2,9 +2,10 @@
 @{
     ViewData["Title"] = "Gán đặc tính cho role";
 }
+<div class="card p-3">
 <h2>@ViewData["Title"]: @Model.role.Name</h2>
 <partial name="_StatusMessage"></partial>
-
+    <div class="card-body pt-0">
 <hr>
 
 <div class="row">
@@ -30,8 +31,8 @@
         </form>
     </div>
 </div>
-
-
+</div>
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

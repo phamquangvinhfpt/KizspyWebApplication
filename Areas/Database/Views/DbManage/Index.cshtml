@@ -1,3 +1,4 @@
+@using KizspyWebApp.Models;
 @using Microsoft.EntityFrameworkCore;
 @using System.Data;
 @inject KizspyDbContext dbContext
@@ -8,43 +9,47 @@
     var can_connect = dbContext.Database.CanConnect();
 }
 
-<partial name="_AlertMessage" />
+<div class="card p-3">
+    <partial name="_AlertMessage" />
 
-<h2>Thông tin:</h2>
-<p>Database: @dbname</p>
-<p>Source: @connect.DataSource</p>
-<p>State: @connect.State</p>
-<hr>
-<h2>Migration</h2>
-@foreach (var item in dbContext.Database.GetPendingMigrations())
-{
-    <p>@item (pending)</p>
-}
-
-@foreach (var item in dbContext.Database.GetAppliedMigrations())
-{
-    <p>@item</p>
-}
-
-@if (dbContext.Database.GetPendingMigrations().Any())
-{
-    <form method="post">
-        <button class="btn btn-primary" asp-action="Migrate">Migrate</button>
-    </form>
-}
-
-@if (can_connect)
-{
-    <h2>Các table</h2>
-    await dbContext.Database.OpenConnectionAsync();
-    var tables = dbContext.Database.GetDbConnection().GetSchema("Tables");
-    <ul>
-        @foreach (DataRow row in tables.Rows)
+    <div class="card-body pt-0">
+        <h2>Thông tin:</h2>
+        <p>Database: @dbname</p>
+        <p>Source: @connect.DataSource</p>
+        <p>State: @connect.State</p>
+        <hr>
+        <h2>Migration</h2>
+        @foreach (var item in dbContext.Database.GetPendingMigrations())
         {
-            <li>@row["TABLE_NAME"]</li>
+            <p>@item (pending)</p>
         }
-    </ul>
 
-    <a class="btn btn-danger" asp-action="DeleteDb">Xóa database: @dbname</a>
-    <a class="btn btn-danger" asp-action="SeedData">Seed Data</a>
-}
+        @foreach (var item in dbContext.Database.GetAppliedMigrations())
+        {
+            <p>@item</p>
+        }
+
+        @if (dbContext.Database.GetPendingMigrations().Any())
+        {
+            <form method="post">
+                <button class="btn btn-primary" asp-action="Migrate">Migrate</button>
+            </form>
+        }
+
+        @if (can_connect)
+        {
+            <h2>Các table</h2>
+            await dbContext.Database.OpenConnectionAsync();
+            var tables = dbContext.Database.GetDbConnection().GetSchema("Tables");
+            <ul>
+                @foreach (DataRow row in tables.Rows)
+                {
+                    <li>@row["TABLE_NAME"]</li>
+                }
+            </ul>
+
+            <a class="btn btn-danger" asp-action="DeleteDb">Xóa database: @dbname</a>
+            <a class="btn btn-danger" asp-action="SeedData">Seed Data</a>
+        }
+    </div>
+</div>
