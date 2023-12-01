@@ -5,10 +5,17 @@
 @{
 	var user = await UserManager.GetUserAsync(User);
 	//Math floor to get the integer part of the number
-	decimal? userAmount = user.Amount;
-	decimal balance = userAmount.HasValue ? Math.Floor(userAmount.Value) : 0m;
-	string currentAction = ViewContext.RouteData.Values["action"].ToString();
-	string currentController = ViewContext.RouteData.Values["controller"].ToString();
+	decimal? userAmount = 0m;
+	decimal balance = 0m;
+	string currentAction = "";
+	string currentController = "";
+	if (user != null)
+    {
+		userAmount = user.Amount;
+		balance = userAmount.HasValue ? Math.Floor(userAmount.Value) : 0m;
+		currentAction = ViewContext.RouteData.Values["action"].ToString();
+		currentController = ViewContext.RouteData.Values["controller"].ToString();
+    }
 }
 <!DOCTYPE html>
 <html lang="en">

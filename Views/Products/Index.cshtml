@@ -29,7 +29,7 @@
                         </g>
                     </svg><!--end::Svg Icon-->
                 </span>
-                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Customers" />
+                <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Products" />
             </div>
             <!--end::Search-->
             <!--begin::Toolbar-->
@@ -49,18 +49,21 @@
                 </button>
                 <!--end::Filter-->
                 <!--begin::Add customer-->
-                <a asp-action="Create" asp-controller="Products" type="button" class="btn btn-primary" data-bs-toggle="tooltip">
-                    <span class="svg-icon svg-icon-primary svg-icon-2x">
-                        <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/Navigation/Plus.svg-->
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <rect fill="#000000" x="4" y="11" width="16" height="2" rx="1" />
-                                <rect fill="#000000" opacity="0.3" transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) " x="4" y="11" width="16" height="2" rx="1" />
-                            </g>
-                        </svg><!--end::Svg Icon-->
-                    </span>
-                    Add Product
-                </a>
+                @if (User.Identity.IsAuthenticated && (User.IsInRole(RoleName.Administrator) || User.IsInRole(RoleName.Editor)))
+                {
+                    <a asp-action="Create" asp-controller="Products" type="button" class="btn btn-primary" data-bs-toggle="tooltip">
+                        <span class="svg-icon svg-icon-primary svg-icon-2x">
+                            <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/Navigation/Plus.svg-->
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect fill="#000000" x="4" y="11" width="16" height="2" rx="1" />
+                                    <rect fill="#000000" opacity="0.3" transform="translate(12.000000, 12.000000) rotate(-270.000000) translate(-12.000000, -12.000000) " x="4" y="11" width="16" height="2" rx="1" />
+                                </g>
+                            </svg><!--end::Svg Icon-->
+                        </span>
+                        Add Product
+                    </a>
+                }
                 <!--end::Add customer-->
             </div>
             <!--end::Toolbar-->
@@ -101,13 +104,20 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Categories)
                     </th>
+                    
                     <th>Action</th>
+                    
                 </tr>
             </thead>
         </table>
     </div>
 </div>
 <script>
+    @* role check *@
+    var isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+    var isAdmin = @User.IsInRole(RoleName.Administrator).ToString().ToLower();
+    var isEditor = @User.IsInRole(RoleName.Editor).ToString().ToLower();
+    var isMember = @User.IsInRole(RoleName.Member).ToString().ToLower();
     var table = new DataTable('#example', {
         ajax: {
             url: '/Products/GetProducts',
@@ -182,7 +192,9 @@
                         '<i class="fas fa-trash"></i>' +
                         '</span>' +
                         '</a>';
-                }
+                },
+                visible: isAuthenticated && (isAdmin || isEditor),
+                searchable: false,
             }
         ]
     });

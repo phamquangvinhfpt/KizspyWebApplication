@@ -13,7 +13,10 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public string HiHome() => "Hi Home";
+    public IActionResult Payment()
+    {
+        return View();
+    }
     public IActionResult Index()
     {
         return View();

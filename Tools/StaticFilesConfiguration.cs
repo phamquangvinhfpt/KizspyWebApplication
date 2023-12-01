@@ -141,6 +141,13 @@ namespace KizspyWebApp.ErrorHandling
 						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
 				RequestPath = new PathString("/database-manage")
 			});
-		}
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+                RequestPath = new PathString("/Home")
+            });
+        }
 	}
 }

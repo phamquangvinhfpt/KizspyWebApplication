@@ -1,0 +1,198 @@
+﻿@using App.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    var user = await UserManager.GetUserAsync(User);
+    string code = "";
+    if (user != null)
+    {
+        code = user.Casso_Code;
+    }
+}
+<div class="card-body p-lg-17">
+
+    <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+
+
+        <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="black"></path>
+                <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="black"></path>
+            </svg>
+        </span>
+
+
+
+        <div class="d-flex flex-column pe-0 pe-sm-10">
+            <h5 class="mb-1">QUY ĐỊNH NẠP TIỀN</h5>
+            <span>
+                - Vui lòng nạp đúng nội dung như hướng dẫn bên dưới hoặc quét mã QR sẽ tự động điền cú
+                pháp
+            </span>
+            <span>
+                - Nạp từ 200.000đ trở lên, nạp dưới 200.000đ trừ 10k tiền phí, nạp SAI CÚ PHÁP trừ 20k tiền
+                phí kiểm tra.
+            </span>
+        </div>
+
+
+        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+            <i class="bi bi-x fs-1 text-danger"></i>
+        </button>
+
+    </div>
+
+
+    <div class="d-flex flex-column flex-lg-row">
+
+        <div class="flex-lg-row-fluid me-lg-15 order-2 order-lg-1 mb-10 mb-lg-0">
+
+            <form class="form" action="#" id="kt_subscriptions_create_new">
+
+                <div class="card card-flush pt-3 mb-5 mb-lg-10">
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+                            <h2 class="fw-bolder">Quét mã QR</h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+
+                                <div class="text-gray-500 fw-bold fs-5 mb-5">
+                                    Quét mã QR bên dưới để tự động điền
+                                    cú
+                                    pháp
+                                </div>
+
+                                <div class="mt-5 mb-5">
+                                    <img src="https://api.vietqr.io/image/970436-1017044309-6rBpGgm.jpg?accountName=PHAM%20QUANG%20VINH&addInfo=@code" alt="QR Code" width="300px">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12 mb-5">
+
+                                <div class="notice d-flex bg-light-success rounded border-success border border-dashed rounded-3 p-6">
+
+                                    <div class="d-flex flex-stack flex-grow-1">
+
+                                        <div class="fw-bold">
+                                            <h4 class="text-gray-900 fw-bolder">
+                                                Nhập mã giới thiệu
+                                            </h4>
+                                            <div class="fs-6 text-gray-700">
+                                                Nhập mã giới thiệu vào ô bên dưới để
+                                                được nhận 50.000vnđ
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <input id="InviteCode" type="text" class="form-control mt-5" placeholder="Mã giới thiệu">
+
+                                <div class="d-flex justify-content-center w-100">
+                                    <button id="SubmitInviteCode" class="btn btn-primary mt-5">Kiểm tra</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed rounded-3 p-6">
+
+                            <div class="d-flex flex-stack flex-grow-1">
+
+                                <div class="fw-bold">
+                                    <h4 class="text-gray-900 fw-bolder">
+                                        Sẽ được công tiền sau khoảng 5 phút
+                                    </h4>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="flex-column flex-lg-row-auto w-100 w-lg-250px w-xl-300px mb-10 order-1 order-lg-2">
+
+            <div class="card card-flush pt-3 mb-0" data-kt-sticky="true" data-kt-sticky-name="subscription-summary" data-kt-sticky-offset="{default: false, lg: '200px'}" data-kt-sticky-width="{lg: '250px', xl: '300px'}" data-kt-sticky-left="auto" data-kt-sticky-top="150px" data-kt-sticky-animation="false" data-kt-sticky-zindex="95" style="">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+                        <h2>Thông tin nạp tiền</h2>
+                    </div>
+
+                </div>
+
+
+                <div class="card-body pt-0 fs-6">
+
+                    <div class="mb-7">
+
+                        <h5 class="mb-3">Chủ tài khoản</h5>
+
+
+                        <div class="d-flex align-items-center mb-1">
+
+                            <a class="fw-bolder text-gray-800 text-hover-primary me-2">PHAM QUANG VINH</a>
+
+
+                            <span class="badge badge-light-success">VIETCOMBANK</span>
+
+                        </div>
+
+
+                        <a href="./naptien" class="fw-bold text-gray-600 text-hover-primary">1017044309</a>
+
+                    </div>
+
+
+                    <div class="separator separator-dashed mb-7"></div>
+
+
+                    <div class="mb-7">
+
+                        <h5 class="mb-3">Nội dung chuyển</h5>
+
+
+                        <div class="mb-0">
+
+                            <div class="mb-10">
+                                <a class="btn btn-light-primary">@code</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="separator separator-dashed mb-7"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
