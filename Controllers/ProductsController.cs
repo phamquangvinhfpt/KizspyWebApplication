@@ -11,7 +11,6 @@ using KizspyWebApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using App.Data;
 using X.PagedList;
-using KizspyWebApp.Data;
 
 namespace KizspyWebApp.Controllers
 {
