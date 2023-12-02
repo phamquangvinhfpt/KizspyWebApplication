@@ -25,7 +25,10 @@
         //get cart
         cart = _context.Carts.Where(x => x.AppUserId == user.Id).FirstOrDefault();
         //get cart items
-        cartItems = _context.CartItems.Where(x => x.CartId == cart.Id).ToList();
+		if (cart != null)
+		{
+			cartItems = _context.CartItems.Where(x => x.CartId == cart.Id).ToList();
+		}
         //get products
         foreach (var item in cartItems)
         {
