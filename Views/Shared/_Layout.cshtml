@@ -1,4 +1,24 @@
-﻿
+﻿@using App.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject KizspyDbContext context
+@{
+	var user = await UserManager.GetUserAsync(User);
+	//Math floor to get the integer part of the number
+	decimal? userAmount = 0m;
+	decimal balance = 0m;
+	string currentAction = "";
+	string currentController = "";
+	if (user != null)
+	{
+		userAmount = user.Amount;
+		balance = userAmount.HasValue ? Math.Floor(userAmount.Value) : 0m;
+		currentAction = ViewContext.RouteData.Values["action"].ToString();
+		currentController = ViewContext.RouteData.Values["controller"].ToString();
+	}
+
+}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,6 +36,7 @@
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 </head>
 
 <body id="kt_body" style="background-image: url(assets/media/patterns/header-bg.jpg)" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
@@ -125,6 +146,27 @@
 									<!--begin::Toolbar wrapper-->
 									<div class="topbar d-flex align-items-stretch flex-shrink-0">
 										<!--end::Quick links-->
+										@if(User.Identity.IsAuthenticated)
+										{
+									<div class="d-flex align-items-center ms-1 ms-lg-3">
+										<!--begin::Menu wrapper-->
+										<a asp-action="ViewCart" asp-controller="Cart" class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px">
+											<!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+											<span class="svg-icon svg-icon-primary svg-icon-2x">
+												<!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/Shopping/Cart2.svg-->
+												<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+													<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+														<rect x="0" y="0" width="24" height="24" />
+														<path d="M12,4.56204994 L7.76822128,9.6401844 C7.4146572,10.0644613 6.7840925,10.1217854 6.3598156,9.76822128 C5.9355387,9.4146572 5.87821464,8.7840925 6.23177872,8.3598156 L11.2317787,2.3598156 C11.6315738,1.88006147 12.3684262,1.88006147 12.7682213,2.3598156 L17.7682213,8.3598156 C18.1217854,8.7840925 18.0644613,9.4146572 17.6401844,9.76822128 C17.2159075,10.1217854 16.5853428,10.0644613 16.2317787,9.6401844 L12,4.56204994 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+														<path d="M3.28077641,9 L20.7192236,9 C21.2715083,9 21.7192236,9.44771525 21.7192236,10 C21.7192236,10.0817618 21.7091962,10.163215 21.6893661,10.2425356 L19.5680983,18.7276069 C19.234223,20.0631079 18.0342737,21 16.6576708,21 L7.34232922,21 C5.96572629,21 4.76577697,20.0631079 4.43190172,18.7276069 L2.31063391,10.2425356 C2.17668518,9.70674072 2.50244587,9.16380623 3.03824078,9.0298575 C3.11756139,9.01002735 3.1990146,9 3.28077641,9 Z M12,12 C11.4477153,12 11,12.4477153 11,13 L11,17 C11,17.5522847 11.4477153,18 12,18 C12.5522847,18 13,17.5522847 13,17 L13,13 C13,12.4477153 12.5522847,12 12,12 Z M6.96472382,12.1362967 C6.43125772,12.2792385 6.11467523,12.8275755 6.25761704,13.3610416 L7.29289322,17.2247449 C7.43583503,17.758211 7.98417199,18.0747935 8.51763809,17.9318517 C9.05110419,17.7889098 9.36768668,17.2405729 9.22474487,16.7071068 L8.18946869,12.8434035 C8.04652688,12.3099374 7.49818992,11.9933549 6.96472382,12.1362967 Z M17.0352762,12.1362967 C16.5018101,11.9933549 15.9534731,12.3099374 15.8105313,12.8434035 L14.7752551,16.7071068 C14.6323133,17.2405729 14.9488958,17.7889098 15.4823619,17.9318517 C16.015828,18.0747935 16.564165,17.758211 16.7071068,17.2247449 L17.742383,13.3610416 C17.8853248,12.8275755 17.5687423,12.2792385 17.0352762,12.1362967 Z" fill="#000000" />
+													</g>
+												</svg><!--end::Svg Icon-->
+											</span>
+											<!--end::Svg Icon-->
+										</a>
+										<!--begin::Menu-->
+									</div>
+										}
 										<!--begin::User-->
 										<div class="d-flex align-items-center me-n3 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 											<!--begin::Menu wrapper-->
@@ -183,13 +225,13 @@
 								<!--begin::Wrapper-->
 								<div class="me-4">
 									<!--begin::Menu-->
-									<a href="#" class="btn btn-bg-white btn-active-color-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">
-									Nạp tiền</a
+									<a asp-action="Payment" asp-controller="Home" class="btn btn-bg-white btn-active-color-primary">
+									Nạp tiền</a>
 									<!--end::Menu-->
 								</div>
 								<!--end::Wrapper-->
 								<!--begin::Button-->
-								<a href="#" class="btn btn-bg-white btn-active-color-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">Số dư: 0 vnd</a>
+								<a asp-action=@currentAction asp-controller=@currentController class="btn btn-bg-white btn-active-color-primary ">Số dư: @balance vnđ</a>
 								<!--end::Button-->
 							</div>
 							}
@@ -203,11 +245,7 @@
 						<!--begin::Post-->
 						<div class="content flex-row-fluid" id="kt_content">
 							<!--begin::Row-->
-						<div class="card">
-							<div class="card-header border-0 pt-6" data-select2-id="select2-data-82-dap6">
-								@RenderBody()
-							</div>
-						</div>
+							@RenderBody()
 						</div>
 						<!--end::Post-->
 					</div>

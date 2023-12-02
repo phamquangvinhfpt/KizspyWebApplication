@@ -93,7 +93,21 @@ namespace KizspyWebApp.ErrorHandling
 				RequestPath = new PathString("/Categories/Edit")
 			});
 
-			app.UseStaticFiles(new StaticFileOptions()
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+                RequestPath = new PathString("/Categories/Delete")
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+                RequestPath = new PathString("/Categories")
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
 			{
 				FileProvider = new PhysicalFileProvider(
 						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
@@ -107,18 +121,39 @@ namespace KizspyWebApp.ErrorHandling
 				RequestPath = new PathString("/Products/Details")
 			});
 
-			app.UseStaticFiles(new StaticFileOptions()
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+                RequestPath = new PathString("/Products/Delete")
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
 			{
 				FileProvider = new PhysicalFileProvider(
 						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
 				RequestPath = new PathString("/Products")
 			});
 
-			app.UseStaticFiles(new StaticFileOptions()
+            app.UseStaticFiles(new StaticFileOptions()
 			{
 				FileProvider = new PhysicalFileProvider(
 						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
 				RequestPath = new PathString("/database-manage")
+			});
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+                RequestPath = new PathString("/Home")
+            });
+
+			app.UseStaticFiles(new StaticFileOptions()
+			{
+				FileProvider = new PhysicalFileProvider(
+						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+				RequestPath = new PathString("/Cart")
 			});
 		}
 	}

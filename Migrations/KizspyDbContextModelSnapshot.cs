@@ -30,8 +30,14 @@ namespace KizspyWebApp.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Casso_Code")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -129,6 +135,58 @@ namespace KizspyWebApp.Migrations
                     b.HasIndex("CartId");
 
                     b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("KizspyWebApp.Models.CassoTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BankSubAccId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorresponsiveAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorresponsiveBankId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorresponsiveBankName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorresponsiveName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("CusumBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubAccId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tid")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VirtualAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VirtualAccountName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("When")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CassoTransactions");
                 });
 
             modelBuilder.Entity("KizspyWebApp.Models.Category", b =>
@@ -234,6 +292,42 @@ namespace KizspyWebApp.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("KizspyWebApp.Models.SystemTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CassoTranId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemTransactions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

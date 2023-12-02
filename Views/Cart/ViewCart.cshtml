@@ -1,0 +1,262 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using App.Data;
+@using App.Models;
+@using KizspyWebApp.Models;
+@using Microsoft.AspNetCore.Identity;
+@model Cart
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> userManager
+@inject KizspyDbContext _context
+@{
+    var user = await userManager.GetUserAsync(User);
+    string username = "";
+    string email = "";
+    List<Product> products = new List<Product>();
+    List<CartItem> cartItems = new List<CartItem>();
+    decimal total = 0;
+    //get cart
+    Cart cart = null;
+    if (user != null)
+    {
+        username = user.UserName;
+        email = user.Email;
+        //get cart
+        cart = _context.Carts.Where(x => x.AppUserId == user.Id).FirstOrDefault();
+        //get cart items
+		if (cart != null)
+		{
+			cartItems = _context.CartItems.Where(x => x.CartId == cart.Id).ToList();
+		}
+        //get products
+        foreach (var item in cartItems)
+        {
+            products.Add(_context.Products.Where(x => x.Id == item.ProductId).FirstOrDefault());
+        }
+    }
+}
+<div class="d-flex flex-column flex-lg-row">
+	<!--begin::Content-->
+	<div class="flex-lg-row-fluid me-lg-15 order-2 order-lg-1 mb-10 mb-lg-0">
+		<!--begin::Form-->
+		<form class="form" action="#" id="kt_subscriptions_create_new">
+			<!--begin::Pricing-->
+			<div class="card card-flush pt-3 mb-5 mb-lg-10">
+				<!--begin::Card header-->
+				<div class="card-header">
+					<!--begin::Card title-->
+					<div class="card-title">
+						<h2 class="fw-bolder">Products</h2>
+					</div>
+					<!--begin::Card title-->
+					<!--begin::Card toolbar-->
+					<div class="card-toolbar">
+						<button type="button" class="btn btn-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_product">Add Product</button>
+					</div>
+					<!--end::Card toolbar-->
+				</div>
+				<!--end::Card header-->
+				<!--begin::Card body-->
+				<div class="card-body pt-0">
+					<!--begin::Table wrapper-->
+					<div class="table-responsive">
+						<!--begin::Table-->
+						<div id="kt_subscription_products_table_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+							<div class="table-responsive">
+								<table class="table align-middle table-row-dashed fs-6 fw-bold gy-4 dataTable no-footer" id="kt_subscription_products_table">
+									<!--begin::Table head-->
+									<thead>
+										<tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0"><th class="min-w-300px sorting_disabled" rowspan="1" colspan="1" style="width: 379.547px;">Product</th><th class="min-w-100px sorting_disabled" rowspan="1" colspan="1" style="width: 130.688px;">Qty</th><th class="min-w-150px sorting_disabled" rowspan="1" colspan="1" style="width: 193.516px;">Price</th><th class="min-w-70px text-end sorting_disabled" rowspan="1" colspan="1" style="width: 90.5px;">Remove</th></tr>
+									</thead>
+									<!--end::Table head-->
+									<!--begin::Table body-->
+									<tbody class="text-gray-600">
+										@foreach (var item in products)
+										{
+											<tr>
+												<td>@item.Name</td>
+												<td>
+													<input type="number" class="form-control form-control-sm form-control-solid" value="1" min="1" />
+												</td>
+												<td>@item.Price</td>
+												<td class="text-end">
+													<!--begin::Delete-->
+													<a href="@item.Id" onclick="RemoveProductFromCart(event)" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="Delete">
+														<!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
+														<span class="svg-icon svg-icon-3">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black"></path>
+																<path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="black"></path>
+																<path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="black"></path>
+															</svg>
+														</span>
+														<!--end::Svg Icon-->
+													</a>
+													<!--end::Delete-->
+												</td>
+											</tr>
+										}
+									</tbody>
+									<!--end::Table body-->
+								</table>
+							</div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"></div></div>
+						</div>
+						<!--end::Table-->
+					</div>
+					<!--end::Table wrapper-->
+				</div>
+				<!--end::Card body-->
+			</div>
+			<!--end::Pricing-->
+			<!--end::Card-->
+		</form>
+		<!--end::Form-->
+	</div>
+	<!--end::Content-->
+	<!--begin::Sidebar-->
+	<div class="flex-column flex-lg-row-auto w-100 w-lg-250px w-xl-300px mb-10 order-1 order-lg-2">
+		<!--begin::Card-->
+		<div class="card card-flush pt-3 mb-0" data-kt-sticky="true" data-kt-sticky-name="subscription-summary" data-kt-sticky-offset="{default: false, lg: '200px'}" data-kt-sticky-width="{lg: '250px', xl: '300px'}" data-kt-sticky-left="auto" data-kt-sticky-top="150px" data-kt-sticky-animation="false" data-kt-sticky-zindex="95" style="">
+			<!--begin::Card header-->
+			<div class="card-header">
+				<!--begin::Card title-->
+				<div class="card-title">
+					<h2>Summary</h2>
+				</div>
+				<!--end::Card title-->
+			</div>
+			<!--end::Card header-->
+			<!--begin::Card body-->
+			<div class="card-body pt-0 fs-6">
+				<!--begin::Section-->
+				<div class="mb-7">
+					<!--begin::Title-->
+					<h5 class="mb-3">Customer details</h5>
+					<!--end::Title-->
+					<!--begin::Details-->
+					<div class="d-flex align-items-center mb-1">
+						<!--begin::Name-->
+						<a href="../../demo2/dist/apps/customers/view.html" class="fw-bolder text-gray-800 text-hover-primary me-2">@username</a>
+						<!--end::Name-->
+						<!--begin::Status-->
+						<span class="badge badge-light-success">Active</span>
+						<!--end::Status-->
+					</div>
+					<!--end::Details-->
+					<!--begin::Email-->
+					<a href="#" class="fw-bold text-gray-600 text-hover-primary">@email</a>
+					<!--end::Email-->
+				</div>
+				<!--end::Section-->
+				<!--begin::Seperator-->
+				<div class="separator separator-dashed mb-7"></div>
+				<!--end::Seperator-->
+				<!--begin::Section-->
+				<div class="mb-7">
+					<!--begin::Title-->
+					<h5 class="mb-3">Product details</h5>
+					<!--end::Title-->
+					<!--begin::Details-->
+					<div class="mb-0">
+						<!--begin::Plan-->
+						<span class="badge badge-light-info me-2">Total Price: </span>
+						<!--end::Plan-->
+						<!--begin::Price-->
+						<span id="price" class="fw-bold text-gray-600">$149.99 / Year</span>
+						<!--end::Price-->
+					</div>
+					<!--end::Details-->
+				</div>
+				<!--end::Section-->
+				<!--begin::Seperator-->
+				<div class="separator separator-dashed mb-7"></div>
+				<!--end::Seperator-->
+				<!--begin::Section-->
+				<div class="mb-10">
+					<!--begin::Title-->
+					<h5 class="mb-3">Payment Details</h5>
+					<!--end::Title-->
+					<!--begin::Details-->
+					<div class="mb-0">
+						<!--begin::Card info-->
+						<div class="fw-bold text-gray-600 d-flex align-items-center">
+							Kizspy wallet
+							<span class="svg-icon svg-icon-primary svg-icon-2x">
+								<!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo8/dist/../src/media/svg/icons/Shopping/Money.svg-->
+								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+									<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+										<rect x="0" y="0" width="24" height="24" />
+										<path d="M2,6 L21,6 C21.5522847,6 22,6.44771525 22,7 L22,17 C22,17.5522847 21.5522847,18 21,18 L2,18 C1.44771525,18 1,17.5522847 1,17 L1,7 C1,6.44771525 1.44771525,6 2,6 Z M11.5,16 C13.709139,16 15.5,14.209139 15.5,12 C15.5,9.790861 13.709139,8 11.5,8 C9.290861,8 7.5,9.790861 7.5,12 C7.5,14.209139 9.290861,16 11.5,16 Z" fill="#000000" opacity="0.3" transform="translate(11.500000, 12.000000) rotate(-345.000000) translate(-11.500000, -12.000000) " />
+										<path d="M2,6 L21,6 C21.5522847,6 22,6.44771525 22,7 L22,17 C22,17.5522847 21.5522847,18 21,18 L2,18 C1.44771525,18 1,17.5522847 1,17 L1,7 C1,6.44771525 1.44771525,6 2,6 Z M11.5,16 C13.709139,16 15.5,14.209139 15.5,12 C15.5,9.790861 13.709139,8 11.5,8 C9.290861,8 7.5,9.790861 7.5,12 C7.5,14.209139 9.290861,16 11.5,16 Z M11.5,14 C12.6045695,14 13.5,13.1045695 13.5,12 C13.5,10.8954305 12.6045695,10 11.5,10 C10.3954305,10 9.5,10.8954305 9.5,12 C9.5,13.1045695 10.3954305,14 11.5,14 Z" fill="#000000" />
+									</g>
+								</svg><!--end::Svg Icon-->
+							</span>
+						</div>
+						<!--end::Card info-->
+					</div>
+					<!--end::Details-->
+				</div>
+				<!--end::Section-->
+				<!--begin::Actions-->
+				<div class="mb-0">
+					<button type="submit" class="btn btn-primary" id="kt_subscriptions_create_button">
+						<!--begin::Indicator-->
+						<span class="indicator-label">Create Subscription</span>
+						<span class="indicator-progress">
+							Please wait...
+							<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+						</span>
+						<!--end::Indicator-->
+					</button>
+				</div>
+				<!--end::Actions-->
+			</div>
+			<!--end::Card body-->
+		</div>
+		<!--end::Card-->
+	</div>
+	<!--end::Sidebar-->
+</div>
+<script>
+	function RemoveProductFromCart(event) {
+        event.preventDefault();
+		var product_id = event.currentTarget.getAttribute('href').split('/').pop();
+		$.ajax({
+			url: '/RemoveProductFromCart',
+			data: { productId: product_id },
+			type: 'POST',
+			dataType: 'json',
+			success: function (data) {
+				//reload page
+				location.reload();
+			},
+			error: function (data) {
+				console.log(data);
+			}
+		});
+    }
+
+	function calculateTotal() {
+		let total = 0;
+		document.querySelectorAll('.form-control-sm').forEach(el => {
+			let qty = parseInt(el.value);
+			let price = parseFloat(el.parentElement.nextElementSibling.innerText);
+			total += qty * price;
+		});
+
+		if (total > 0) {
+			document.getElementById('price').innerText = total + ' vnđ';
+		} else {
+			document.getElementById('price').innerText = '0 vnđ';
+		}
+	}
+
+	calculateTotal(); // Gọi hàm ngay khi khởi tạo
+
+	document.querySelectorAll('.form-control-sm').forEach(el => {
+		el.addEventListener('change', () => {
+			calculateTotal(); // Gọi hàm khi có thay đổi
+		});
+	});
+</script>

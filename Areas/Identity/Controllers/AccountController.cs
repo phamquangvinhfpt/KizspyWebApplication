@@ -8,12 +8,14 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App.Areas.Identity.Models.AccountViewModels;
+using App.Data;
 using App.ExtendMethods;
 using App.Models;
 using App.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
@@ -140,10 +142,10 @@ namespace App.Areas.Identity.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = model.UserName, Email = model.Email };
+                var user = new AppUser { UserName = model.UserName, Email = model.Email, Casso_Code = generateRandomString() };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 //Add role to user using RoleClaim
-                await _userManager.AddToRoleAsync(user, "Member");
+                await _userManager.AddToRoleAsync(user, RoleName.Member);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Đã tạo user mới.");
@@ -404,7 +406,7 @@ namespace App.Areas.Identity.Controllers
         // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
@@ -413,7 +415,8 @@ namespace App.Areas.Identity.Controllers
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    //return View("ForgotPasswordConfirmation");
+                    return Json(new { success = false, message = "User này không có hoặc chưa xác thực!" });
                 }
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -428,12 +431,10 @@ namespace App.Areas.Identity.Controllers
                     "Reset Password",
                     $"Hãy bấm <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>vào đây</a> để đặt lại mật khẩu.");
 
-                return RedirectToAction(nameof(ForgotPasswordConfirmation));
-   
-
-
+                //return RedirectToAction(nameof(ForgotPasswordConfirmation));
+                return Json(new { success = true, message = $"Hãy bấm <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>vào đây</a> để đặt lại mật khẩu.", stringcode = code });
             }
-            return View(model);
+            return Json(new { success = false, message = "Không tìm thấy email này trong hệ thống" });
         }
 
         //
@@ -458,27 +459,31 @@ namespace App.Areas.Identity.Controllers
         // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                //return View(model);
+                return Json(new { success = false, message = "Dữ liệu không hợp lệ" });
             }
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+                //return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+                return Json(new { success = false, message = "Không tìm thấy email này trong hệ thống" });
             }
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Code));
 
             var result = await _userManager.ResetPasswordAsync(user, code, model.Password);
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+                //return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+                return Json(new { success = true, message = "Đặt lại mật khẩu thành công" });
             }
             ModelState.AddModelError(result);
-            return View();
+            //return View();
+            return Json(new { success = false, message = "Đặt lại mật khẩu không thành công" });
         }
 
         //
@@ -691,8 +696,13 @@ namespace App.Areas.Identity.Controllers
             return View();
         }
 
-
-
-    
-  }
+        private string generateRandomString()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            //return a new string start with Kizspy and 6-10 random chars
+            return "Kizspy " + new string(Enumerable.Repeat(chars, random.Next(6, 10))
+                               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+    }
 }

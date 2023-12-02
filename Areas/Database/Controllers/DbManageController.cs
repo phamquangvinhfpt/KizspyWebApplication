@@ -76,12 +76,22 @@ namespace KizspyWebApp.Controllers
                     UserName = "admin",
                     Email = "admin@example.com",
                     EmailConfirmed = true,
+                    Casso_Code = generateRandomString(),
                 };
                 await _userManager.CreateAsync(useradmin, "123456");
                 await _userManager.AddToRoleAsync(useradmin, RoleName.Administrator);
             }
             StatusMessage = "Seed data successfully";
             return RedirectToAction(nameof(Index));
+        }
+
+        private string generateRandomString()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            //return a new string start with Kizspy and 6-10 random chars
+            return "Kizspy " + new string(Enumerable.Repeat(chars, random.Next(6, 10))
+                               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
