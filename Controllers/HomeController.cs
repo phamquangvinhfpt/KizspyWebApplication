@@ -98,6 +98,21 @@ public class HomeController : Controller
                             await _userManager.UpdateAsync(user);
                             await _context.SaveChangesAsync();
                             return Ok(systemTransactionEntity);
+                        } else
+                        {
+                            var systemTransactionEntity = new SystemTransaction
+                            {
+                                CreateAt = DateTime.Now.ToUniversalTime(),
+                                CassoTranId = transactionEntity.Id,
+                                UserId = Guid.Parse("00000000-0000-0000-0000-000000000000"),
+                                Amount = transactionEntity.Amount ?? 0,
+                                TransactionType = "Cộng tiền!",
+                                TotalBalance = (decimal)(transactionEntity.Amount),
+                                Description = transactionEntity.Description
+                            };
+                            await _context.SystemTransactions.AddAsync(systemTransactionEntity);
+                            await _context.SaveChangesAsync();
+                            return Ok(systemTransactionEntity);
                         }
                     }
                 }
