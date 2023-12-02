@@ -151,7 +151,7 @@
                         '</div>' +
                         '<div class="overlay-layer bg-dark bg-opacity-25">' +
                         '<a href="/Products/Details/' + row.id + '" class="btn btn-primary btn-shadow btn-sm">Explore</a>' +
-                        '<a href="#" class="btn btn-light-primary btn-shadow btn-sm ms-2">Purchase</a>' +
+                        '<a href="' + row.id + '" onclick="AddCartItem(event)" class="btn btn-light-primary btn-shadow btn-sm ms-2">Purchase</a>' +
                         '</div>' +
                         '</div>' +
                         '</div>';
@@ -268,4 +268,19 @@ $('[data-kt-docs-table-filter="filter"]').on('click', function () {
         var value = $(this).attr('data-kt-docs-table-filter-value');
         table.column(filter + ':name').search(value).draw();
     });
+
+    //Add to cart function
+    function AddCartItem(event) {
+        event.preventDefault();
+        var id = event.currentTarget.getAttribute('href').split('/').pop();
+        $.ajax({
+            url: '/Cart/AddProductToCart',
+            type: 'Post',
+            data: { productId: id },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
 </script>

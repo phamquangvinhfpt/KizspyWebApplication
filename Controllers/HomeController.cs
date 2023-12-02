@@ -87,14 +87,20 @@ public class HomeController : Controller
                                 TotalBalance = (decimal)(user.Amount + transactionEntity.Amount),
                                 Description = transactionEntity.Description
                             };
+                            //dưới 200.000đ trừ 10.000đ
+                            if(transactionEntity.Amount < 200000)
+                            {
+                                systemTransactionEntity.TotalBalance = (decimal)(user.Amount + transactionEntity.Amount - 10000);
+                            }
                             user.Amount = systemTransactionEntity.TotalBalance;
                             await _context.SystemTransactions.AddAsync(systemTransactionEntity);
-                            _userManager.UpdateAsync(user);
+                            //update user
+                            await _userManager.UpdateAsync(user);
                             await _context.SaveChangesAsync();
+                            return Ok(systemTransactionEntity);
                         }
-                    }    
+                    }
                 }
-                return Ok(new SystemTransaction());
             }    
         }
         catch (Exception)
