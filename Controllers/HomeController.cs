@@ -4,6 +4,7 @@ using KizspyWebApp.Models;
 using KizspyWebApp.Response;
 using Microsoft.AspNetCore.Identity;
 using App.Models;
+using System.Text.RegularExpressions;
 
 namespace KizspyWebApp.Controllers;
 
@@ -73,7 +74,7 @@ public class HomeController : Controller
                         };
                         await _context.CassoTransactions.AddAsync(transactionEntity);
                         await _context.SaveChangesAsync();
-                        var user = _userManager.Users.FirstOrDefault(x => x.Casso_Code == item.Description);
+                        var user = _userManager.Users.FirstOrDefault(x => x.Casso_Code == GetKizspyCode(item.Description));
                         //Add System Transaction
                         if (user != null)
                         {
@@ -123,5 +124,20 @@ public class HomeController : Controller
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
         return StatusCode(StatusCodes.Status400BadRequest);
+    }
+
+    public static string GetKizspyCode(string description)
+    {
+        // regex pattern: Kizspy\s([a-zA-Z0-9\s]+)
+        Regex regex = new Regex(@"Kizspy\s([a-zA-Z0-9\s]+)");
+        Match match = regex.Match(description);
+
+        if (match.Success)
+        {
+            string kizspyCode = "Kizspy " + match.Groups[1].Value.Replace(" ", "");
+            return kizspyCode;
+        }
+
+        return "";
     }
 }
