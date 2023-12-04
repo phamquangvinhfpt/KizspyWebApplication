@@ -26,6 +26,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - KizspyWebApp</title>
+	<link rel="icon" type="image/x-icon" href="/logo.jpg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -67,9 +68,9 @@
 							<!--end::Heaeder menu toggle-->
 							<!--begin::Header Logo-->
 							<div class="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0">
-								<a href="../../demo2/dist/index.html">
-									<img alt="Logo" src="assets/media/logos/logo-demo2.png" class="logo-default h-25px" />
-									<img alt="Logo" src="assets/media/logos/logo-demo2-sticky.png" class="logo-sticky h-25px" />
+								<a asp-action="Index" asp-controller="Home">
+									<img alt="Logo" src="/logo.jpg" class="logo-default h-25px" />
+									<img alt="Logo" src="/logo.jpg" class="logo-sticky h-25px" />
 								</a>
 							</div>
 							<!--end::Header Logo-->
@@ -1299,6 +1300,19 @@
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
+	<!--Start of Tawk.to Script-->
+	<script type="text/javascript">
+		var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+		(function () {
+			var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+			s1.async = true;
+			s1.src = 'https://embed.tawk.to/656d8382ff45ca7d47868c4e/1hgpsjdum';
+			s1.charset = 'UTF-8';
+			s1.setAttribute('crossorigin', '*');
+			s0.parentNode.insertBefore(s1, s0);
+		})();
+	</script>
+	<!--End of Tawk.to Script-->
 	@await RenderSectionAsync("Scripts", required: false)
 	</body>
 
