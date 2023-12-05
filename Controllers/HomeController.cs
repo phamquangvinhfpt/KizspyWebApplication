@@ -74,7 +74,7 @@ public class HomeController : Controller
                         };
                         await _context.CassoTransactions.AddAsync(transactionEntity);
                         await _context.SaveChangesAsync();
-                        var user = _userManager.Users.FirstOrDefault(x => x.Casso_Code == GetKizspyCode(item.Description));
+                        var user = _userManager.Users.FirstOrDefault(x => GetKizspyCode(item.Description).Contains(x.Casso_Code));
                         //Add System Transaction
                         if (user != null)
                         {
