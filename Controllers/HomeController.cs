@@ -89,7 +89,7 @@ public class HomeController : Controller
                                 Description = transactionEntity.Description
                             };
                             //dưới 200.000đ trừ 10.000đ
-                            if(transactionEntity.Amount < 200000)
+                            if(transactionEntity.Amount <= 200000)
                             {
                                 systemTransactionEntity.TotalBalance = (decimal)(user.Amount + transactionEntity.Amount - 10000);
                             }
@@ -126,7 +126,33 @@ public class HomeController : Controller
         return StatusCode(StatusCodes.Status400BadRequest);
     }
 
-    public static string GetKizspyCode(string description)
+	[HttpPost]
+    public async Task<IActionResult> CassoAsync()
+    {
+		string bankAccId = "0948190073";
+		string apiKey = "<phamquangvinh"; // Replace with your API key
+		using (HttpClient client = new HttpClient())
+		{
+			client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+			client.DefaultRequestHeaders.Add("Authorization", apiKey);
+			var requestBody = new
+			{
+				bank_acc_id = bankAccId
+			};
+			var response = await client.PostAsJsonAsync("https://oauth.casso.vn/v2/sync", requestBody);
+			if (response.IsSuccessStatusCode)
+			{
+				var result = await response.Content.ReadAsStringAsync();
+				return Ok(result);
+			}
+			else
+			{
+				return StatusCode(StatusCodes.Status400BadRequest);
+			}
+		}
+	}
+
+	public static string GetKizspyCode(string description)
     {
         // regex pattern: Kizspy\s([a-zA-Z0-9\s]+)
         Regex regex = new Regex(@"Kizspy\s([a-zA-Z0-9\s]+)");
