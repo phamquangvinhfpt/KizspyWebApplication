@@ -14,7 +14,7 @@ using X.PagedList;
 
 namespace KizspyWebApp.Controllers
 {
-    //[Authorize]
+    [Authorize (Roles = RoleName.Administrator + "," + RoleName.Editor)]
     public class ProductsController : Controller
     {
         private readonly KizspyDbContext _context;
@@ -112,9 +112,13 @@ namespace KizspyWebApp.Controllers
                     _context.ProductCategories.Add(productCategory);
                     }
                     await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return Json(new {success=true, message="Product created successfully."});
             }
-            return View(product);
+            //return View(product);
+            //get errors from model state
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            return Json(new {success=false, message=errors});
         }
 
         // GET: Products/Edit/5
@@ -215,9 +219,12 @@ namespace KizspyWebApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Product edited successfully." });
             }
-            return View(product);
+            //return View(product);
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            return Json(new { success = false, message = errors });
         }
 
         // GET: Products/Delete/5

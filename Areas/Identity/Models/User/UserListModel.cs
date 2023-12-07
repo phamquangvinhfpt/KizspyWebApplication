@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using App.Areas.Identity.Models.ManageViewModels;
 using App.Models;
 
 namespace App.Areas.Identity.Models.UserViewModels
@@ -13,7 +14,6 @@ namespace App.Areas.Identity.Models.UserViewModels
             public int currentPage { get; set; }
 
             public List<UserAndRole> users { get; set; }
-
         }
 
         public class UserAndRole : AppUser

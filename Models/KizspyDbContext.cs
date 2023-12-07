@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using App.Models;
+
 namespace KizspyWebApp.Models
 {
     public class KizspyDbContext : IdentityDbContext<AppUser>
     {
+        internal readonly IEnumerable<object> ExtraProfiles;
+
         public KizspyDbContext()
         {
         }

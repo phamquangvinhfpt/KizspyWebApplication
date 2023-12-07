@@ -66,9 +66,12 @@ namespace KizspyWebApp.Controllers
                 category.Id = Guid.NewGuid();
                 _context.Add(category);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Category created successfully." });
             }
-            return View(category);
+            //return View(category);
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            return Json(new { success = false, message = errors });
         }
 
         // GET: Categories/Edit/5
@@ -117,9 +120,12 @@ namespace KizspyWebApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Category edited successfully." });
             }
-            return View(category);
+            //return View(category);
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            return Json(new { success = false, message = errors });
         }
 
         // GET: Categories/Delete/5
@@ -142,21 +148,24 @@ namespace KizspyWebApp.Controllers
 
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.Categories == null)
             {
-                return Problem("Entity set 'KizspyDbContext.Categories'  is null.");
+                return Json(new { success = false, message = "Entity set 'KizspyDbContext.Categories'  is null." });
             }
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
                 _context.Categories.Remove(category);
+            }else
+            {
+                return Json(new { success = false, message = "Categories not found." });
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = "Delete success." });
         }
 
         private bool CategoryExists(Guid id)

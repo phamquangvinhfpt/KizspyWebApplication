@@ -20,7 +20,7 @@
                         <span asp-validation-for="CategoryName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <input onclick="edit(event)" type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </form>
             </div>
@@ -31,6 +31,70 @@
         </div>
     </div>
 </div>
+<script>
+    function edit(e) {
+        e.preventDefault();
+        var form = e.target.closest('form');
+        var formData = new FormData(form);
+        var url = form.action;
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': token
+            },
+            success: function (data) {
+                if (data.success) {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": true,
+                        "progressBar": true,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    };
+                    toastr.success(data.message);
+                    setTimeout(function () {
+                        window.location.href = "/Categories/Index";
+                    }, 1000);
+                }
+                else {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": true,
+                        "progressBar": true,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    };
+                    data.message.forEach((error) => {
+                        toastr.error(error.errorMessage);
+                    });
+                }
+            }
+        });
+    }
+</script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

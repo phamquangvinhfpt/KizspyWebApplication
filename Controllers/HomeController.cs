@@ -5,6 +5,7 @@ using KizspyWebApp.Response;
 using Microsoft.AspNetCore.Identity;
 using App.Models;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KizspyWebApp.Controllers;
 
@@ -25,9 +26,17 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    public IActionResult LandingPage()
+    {
+        return View("Landing");
+    }
+
     public IActionResult Index()
     {
-        return View();
+        ViewBag.Categories = _context.Categories.ToList();
+        var products = _context.Products.Where(x => x.Status == true).ToList();
+        return View(products);
     }
 
     public IActionResult Privacy()

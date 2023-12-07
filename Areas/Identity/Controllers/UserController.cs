@@ -81,6 +81,11 @@ namespace App.Areas.Identity.Controllers
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 user.RoleNames = string.Join(",", roles);
+                var userData = await _userManager.FindByIdAsync(user.Id);
+                user.Email = userData.Email;
+                user.PhoneNumber = userData.PhoneNumber;
+                user.HomeAdress = userData.HomeAdress;
+                user.BirthDate = userData.BirthDate;
             } 
             
             return View(model);

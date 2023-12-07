@@ -83,5 +83,19 @@ namespace KizspyWebApp.Controllers
 			await _context.SaveChangesAsync();
 			return Ok(cart.cartItems);
 		}
+
+		[HttpGet]
+		[Route("/GetCartCount")]
+		public async Task<IActionResult> GetCartCount()
+		{
+			var cart = await _context.Carts.FirstOrDefaultAsync(x => x.AppUserId == _userManager.GetUserId(User));
+			if (cart == null)
+			{
+				//return count = 0
+				return Json(new { count = 0 });
+			}
+			var count = await _context.CartItems.CountAsync(x => x.CartId == cart.Id);
+			return Json(new { count = count });
+		}
 	}
 }

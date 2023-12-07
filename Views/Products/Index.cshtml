@@ -91,18 +91,18 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Qty)
                     </th>
-                    <th>
+                    @* <th>
                         @Html.DisplayNameFor(model => model.Description)
-                    </th>
+                    </th> *@
                     <th>
                         @Html.DisplayNameFor(model => model.Image)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Status)
                     </th>
-                    <th>
+                    @* <th>
                         @Html.DisplayNameFor(model => model.Categories)
-                    </th>
+                    </th> *@
                     
                     <th>Action</th>
                     
@@ -129,9 +129,11 @@
               visible: false,
               searchable: false
             },
-            { data: 'name' },
+            { data: 'name',
+              width: '20%'
+            },
             { data: 'price' },
-            { data: 'qty' },
+            { data: 'qty' }@* ,
             {
                 data: 'description',
                 render: function (data) {
@@ -140,9 +142,10 @@
                         '<textarea class="form-control" data-kt-autosize="true" readonly>' + data + '</textarea>' +
                         '</div>';
                 }
-            },
+            } *@,
             {
                 data: 'image',
+                width: '15%',
                 render: function (data, type, row) {
                     return '<div class="card  overlay overflow-hidden">' +
                         '<div class="card-body p-0">' +
@@ -167,7 +170,7 @@
                         return '<span class="badge badge-light-danger">Inactive</span>';
                     }
                 }
-            },
+            }@* ,
             {
                 data: 'categories',
                 render: function (data) {
@@ -177,7 +180,7 @@
                     });
                 return html;
                 }
-            },
+            } *@,
             {
                 data: 'id',
                 render: function (data) {
