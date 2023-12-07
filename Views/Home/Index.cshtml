@@ -6,6 +6,7 @@
     ViewData["Title"] = "Home Page";
     //get categories from controller
     var categories = ViewBag.Categories;
+    //thêm dấu phẩy vào giá tiền để dễ nhìn
 }
 @* <partial name="_AlertMessage"/>
 <div class="text-center">
@@ -65,22 +66,29 @@
                     </div> *@
                     @foreach(var item in Model)
                     {
-                        <div class="col-md-4">
-                            <div class="card mb-4 box-shadow">
+                        <div class="col-md-4 h-full">
+                            <div class="card card-flush mb-4 box-shadow">
                                 <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 200px; width: 100%; display: block;" src="@item.Image" data-holder-rendered="true">
                                 <div class="card-body">
                                     <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                        <h3 class="card-title text-uppercase">
+                                        <h4 class="card-title text-uppercase" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="@item.Name">
                                             <span>@item.Name</span>
-                                        </h3>
-                                        <span>@item.Price vnđ</span>
+                                        </h4>
                                     </div>
-                                    <p class="card-text">@item.Description</p>
+                                    <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                                        <span class="card-text text-uppercase">
+                                            <span style="background: url(/16066101745881.gif)">@string.Format("{0:c0}", item.Price)</span>
+                                        </span>
+                                        <span>vnđ</span>
+                                    </div>
+                                    
+                                </div>
+                                <div class="card-footer">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <a type="button" class="btn btn-sm badge badge-success">Detail</a>
+                                            <a asp-action="Details" asp-controller="Products" asp-route-Id="@item.Id" type="button" class="btn btn-sm badge badge-success">Detail</a>
                                         </div>
-                                        <button type="button" class="btn btn-sm badge badge-danger">Add Cart</button>
+                                        <a href="@item.Id" onclick="AddCartItem(event)" type="button" class="btn btn-sm badge badge-danger">Add Cart</a>
                                     </div>
                                 </div>
                             </div>
@@ -205,3 +213,36 @@
     </div>
 
 </div>
+<script>
+    //Add to cart function
+    function AddCartItem(event) {
+        event.preventDefault();
+        var id = event.currentTarget.getAttribute('href').split('/').pop();
+        $.ajax({
+            url: '/Cart/AddProductToCart',
+            type: 'Post',
+            data: { productId: id },
+            dataType: 'json',
+            success: function (data) {
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                toastr.success("Product added to cart successfully");
+                console.log(data);
+            }
+        });
+    }
+</script>

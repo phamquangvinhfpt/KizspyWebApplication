@@ -132,7 +132,9 @@
             { data: 'name',
               width: '20%'
             },
-            { data: 'price' },
+            { data: 'price',
+              render: $.fn.dataTable.render.number(',', '.', 0, '$')
+            },
             { data: 'qty' }@* ,
             {
                 data: 'description',

@@ -25,10 +25,10 @@
         //get cart
         cart = _context.Carts.Where(x => x.AppUserId == user.Id).FirstOrDefault();
         //get cart items
-		if (cart != null)
-		{
-			cartItems = _context.CartItems.Where(x => x.CartId == cart.Id).ToList();
-		}
+        if (cart != null)
+        {
+            cartItems = _context.CartItems.Where(x => x.CartId == cart.Id).ToList();
+        }
         //get products
         foreach (var item in cartItems)
         {
@@ -52,7 +52,7 @@
 					<!--begin::Card title-->
 					<!--begin::Card toolbar-->
 					<div class="card-toolbar">
-						<button type="button" class="btn btn-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_product">Add Product</button>
+						<a asp-action="Index" asp-controller="Home" class="btn btn-light-primary">Add Product</a>
 					</div>
 					<!--end::Card toolbar-->
 				</div>
@@ -79,7 +79,7 @@
 												<td>
 													<input type="number" class="form-control form-control-sm form-control-solid" value="1" min="1" />
 												</td>
-												<td>@item.Price</td>
+												<td>@string.Format("{0:c0}", item.Price)</td>
 												<td class="text-end">
 													<!--begin::Delete-->
 													<a href="@item.Id" onclick="RemoveProductFromCart(event)" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="Delete">
@@ -239,7 +239,7 @@
 
 	function calculateTotal() {
 		let total = 0;
-		document.querySelectorAll('.form-control-sm').forEach(el => {
+		@* document.querySelectorAll('.form-control-sm').forEach(el => {
 			let qty = parseInt(el.value);
 			let price = parseFloat(el.parentElement.nextElementSibling.innerText);
 			total += qty * price;
@@ -249,7 +249,19 @@
 			document.getElementById('price').innerText = total + ' vnđ';
 		} else {
 			document.getElementById('price').innerText = '0 vnđ';
-		}
+		} *@
+			@* convert @string.Format("{0:c0}", item.Price) to int *@
+		document.querySelectorAll('.form-control-sm').forEach(el => {
+            let qty = parseInt(el.value);
+            let price = parseInt(el.parentElement.nextElementSibling.innerText.replace(/\D/g, ''));
+            total += qty * price;
+        });
+
+		if (total > 0) {
+            document.getElementById('price').innerText = total.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
+        } else {
+            document.getElementById('price').innerText = '0 vnđ';
+        }
 	}
 
 	calculateTotal(); // Gọi hàm ngay khi khởi tạo

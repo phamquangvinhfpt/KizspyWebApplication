@@ -187,45 +187,16 @@
                             <li class="nav-item">
                                 <a class="nav-link me-4" href="#latest-blog">Blog</a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" href="index.html#" role="button" aria-expanded="false">Pages</a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/about.html" class="dropdown-item">About</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/blog.html" class="dropdown-item">Blog</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/shop.html" class="dropdown-item">Shop</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/cart.html" class="dropdown-item">Cart</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/checkout.html" class="dropdown-item">Checkout</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/single-post.html" class="dropdown-item">Single Post</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/single-product.html" class="dropdown-item">Single Product</a>
-                                    </li>
-                                    <li>
-                                        <a href="https://themewagon.github.io/MiniStore/contact.html" class="dropdown-item">Contact</a>
-                                    </li>
-                                </ul>
-                            </li>
                             <li class="nav-item">
                                 <div class="user-items ps-5">
                                     <ul class="d-flex justify-content-end list-unstyled">
-                                        <li class="search-item pe-3">
-                                            <a href="index.html#" class="search-button">
+                                        @* <li class="search-item pe-3">
+                                            <a asp-action="Index" asp-controller="Home" class="search-button">
                                                 <svg class="search">
                                                     <use xlink:href="#search"></use>
                                                 </svg>
                                             </a>
-                                        </li>
+                                        </li> *@
                                         <li class="pe-3">
                                             <a asp-action="Login" asp-area="Identity" asp-controller="Account">
                                                 <svg class="user">
@@ -233,13 +204,13 @@
                                                 </svg>
                                             </a>
                                         </li>
-                                        <li>
+                                        @* <li>
                                             <a href="https://themewagon.github.io/MiniStore/cart.html">
                                                 <svg class="cart">
                                                     <use xlink:href="#cart"></use>
                                                 </svg>
                                             </a>
-                                        </li>
+                                        </li> *@
                                     </ul>
                                 </div>
                             </li>
@@ -258,7 +229,7 @@
                             <div class="col-md-6">
                                 <div class="banner-content">
                                     <h1 class="display-2 text-uppercase text-dark pb-5">Your Products Are Great.</h1>
-                                    <a href="https://themewagon.github.io/MiniStore/shop.html" class="btn btn-medium btn-dark text-uppercase btn-rounded-none">Shop Product</a>
+                                    <a asp-action="Index" asp-controller="Home" class="btn btn-medium btn-dark text-uppercase btn-rounded-none">Shop Product</a>
                                 </div>
                             </div>
                             <div class="col-md-5">
@@ -275,7 +246,7 @@
                             <div class="col-md-6">
                                 <div class="banner-content">
                                     <h1 class="display-2 text-uppercase text-dark pb-5">Technology Hack You Won't Get</h1>
-                                    <a href="https://themewagon.github.io/MiniStore/shop.html" class="btn btn-medium btn-dark text-uppercase btn-rounded-none">Shop Product</a>
+                                    <a asp-action="Index" asp-controller="Home" class="btn btn-medium btn-dark text-uppercase btn-rounded-none">Shop Product</a>
                                 </div>
                             </div>
                             <div class="col-md-5">
@@ -363,7 +334,7 @@
                 <div class="display-header d-flex justify-content-between pb-3">
                     <h2 class="display-7 text-dark text-uppercase">Mobile Products</h2>
                     <div class="btn-right">
-                        <a href="https://themewagon.github.io/MiniStore/shop.html" class="btn btn-medium btn-normal text-uppercase">Go to Shop</a>
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-medium btn-normal text-uppercase">Go to Shop</a>
                     </div>
                 </div>
                 <div class="swiper product-swiper">
@@ -375,12 +346,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">Iphone 10</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 10</a>
                                     </h3>
                                     <span class="item-price text-primary">$980</span>
                                 </div>
@@ -393,12 +364,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">Iphone 11</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 11</a>
                                     </h3>
                                     <span class="item-price text-primary">$1100</span>
                                 </div>
@@ -411,12 +382,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">Iphone 8</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 8</a>
                                     </h3>
                                     <span class="item-price text-primary">$780</span>
                                 </div>
@@ -429,12 +400,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">Iphone 13</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 13</a>
                                     </h3>
                                     <span class="item-price text-primary">$1500</span>
                                 </div>
@@ -447,12 +418,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">Iphone 12</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 12</a>
                                     </h3>
                                     <span class="item-price text-primary">$1300</span>
                                 </div>
@@ -470,7 +441,7 @@
                 <div class="display-header d-flex justify-content-between pb-3">
                     <h2 class="display-7 text-dark text-uppercase">Smart Watches</h2>
                     <div class="btn-right">
-                        <a href="https://themewagon.github.io/MiniStore/shop.html" class="btn btn-medium btn-normal text-uppercase">Go to Shop</a>
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-medium btn-normal text-uppercase">Go to Shop</a>
                     </div>
                 </div>
                 <div class="swiper product-watch-swiper">
@@ -482,12 +453,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">Pink watch</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Pink watch</a>
                                     </h3>
                                     <span class="item-price text-primary">$870</span>
                                 </div>
@@ -500,12 +471,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">Heavy watch</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Heavy watch</a>
                                     </h3>
                                     <span class="item-price text-primary">$680</span>
                                 </div>
@@ -518,12 +489,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">spotted watch</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">spotted watch</a>
                                     </h3>
                                     <span class="item-price text-primary">$750</span>
                                 </div>
@@ -536,12 +507,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">black watch</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">black watch</a>
                                     </h3>
                                     <span class="item-price text-primary">$650</span>
                                 </div>
@@ -554,12 +525,12 @@
                                 </div>
                                 <div class="cart-concern position-absolute">
                                     <div class="cart-button d-flex">
-                                        <a href="index.html#" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
                                     </div>
                                 </div>
                                 <div class="card-detail d-flex justify-content-between pt-3">
                                     <h3 class="card-title text-uppercase">
-                                        <a href="index.html#">black watch</a>
+                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">black watch</a>
                                     </h3>
                                     <span class="item-price text-primary">$750</span>
                                 </div>
