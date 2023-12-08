@@ -47,9 +47,26 @@ namespace KizspyWebApp.Controllers
 				cartItem = new CartItem
 				{
 					ProductId = productId,
-					CartId = cart.Id
+					CartId = cart.Id,
+					ProductName = product.Name,
 				};
+				//Quantity + 1
+				cartItem.Quantity = 1;
+				//Calculate price
+				cartItem.Price = cartItem.Quantity * product.Price;
 				_context.CartItems.Add(cartItem);
+			} else
+			{
+				//Add Product to cart
+				cartItem.ProductId = productId;
+				cartItem.CartId = cart.Id;
+				cartItem.ProductName = product.Name;
+				//Quantity + 1
+                cartItem.Quantity += 1;
+                //Calculate price
+                cartItem.Price = cartItem.Quantity * product.Price;
+				//update cart item
+				_context.CartItems.Update(cartItem);
 			}
 
 			//return list cart item
@@ -69,20 +86,26 @@ namespace KizspyWebApp.Controllers
 		[Route("/RemoveProductFromCart")]
 		public async Task<IActionResult> RemoveProductFromCart(Guid productId)
 		{
-			var cart = await _context.Carts.FirstOrDefaultAsync(x => x.AppUserId == _userManager.GetUserId(User));
-			if (cart == null)
+            try
 			{
-				return NotFound();
-			}
-			var cartItem = await _context.CartItems.FirstOrDefaultAsync(x => x.ProductId == productId && x.CartId == cart.Id);
-			if (cartItem == null)
+                var cart = await _context.Carts.FirstOrDefaultAsync(x => x.AppUserId == _userManager.GetUserId(User));
+                if (cart == null)
+				{
+                    return NotFound("cart not found");
+                }
+                var cartItem = await _context.CartItems.FirstOrDefaultAsync(x => x.ProductId == productId && x.CartId == cart.Id);
+                if (cartItem == null)
+				{
+                    return NotFound("cart item not found");
+                }
+                _context.CartItems.Remove(cartItem);
+                await _context.SaveChangesAsync();
+                return Ok(cart.cartItems);
+            } catch (Exception e)
 			{
-				return NotFound();
-			}
-			_context.CartItems.Remove(cartItem);
-			await _context.SaveChangesAsync();
-			return Ok(cart.cartItems);
-		}
+                return BadRequest(e.Message);
+            }
+        }
 
 		[HttpGet]
 		[Route("/GetCartCount")]

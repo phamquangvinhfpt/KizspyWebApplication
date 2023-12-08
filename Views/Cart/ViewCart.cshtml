@@ -39,11 +39,11 @@
                 _context.SaveChanges();
             }
         }
-        //get products
-        foreach (var item in cartItems)
-        {
-            products.Add(_context.Products.Where(x => x.Id == item.ProductId).FirstOrDefault());
-        }
+        // //get products
+        // foreach (var item in cartItems)
+        // {
+        //     products.Add(_context.Products.Where(x => x.Id == item.ProductId).FirstOrDefault());
+        // }
     }
 }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -88,17 +88,17 @@
 									<!--end::Table head-->
 									<!--begin::Table body-->
                                     <tbody class="text-gray-600">
-                                        @foreach (var item in products)
+                                        @foreach (var item in cartItems)
                                         {
                                             <tr>
-												<td>@item.Name</td>
+												<td>@item.ProductName</td>
 												<td>
-													<input type="number" class="form-control form-control-sm form-control-solid" value="1" min="1" />
+													<input type="number" class="form-control form-control-sm form-control-solid" value="@item.Quantity" min="1" />
 												</td>
 												<td>@string.Format("{0:c0}", item.Price)</td>
 												<td class="text-end">
 													<!--begin::Delete-->
-													<a href="@item.Id" onclick="RemoveProductFromCart(event)" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="Delete">
+													<a href="@item.ProductId" onclick="RemoveProductFromCart(event)" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="Delete">
 														<!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
 														<span class="svg-icon svg-icon-3">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
