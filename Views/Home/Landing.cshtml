@@ -2,11 +2,13 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @using App.Models;
+@using KizspyWebApp.ViewModels;
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Http
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject KizspyDbContext context
+@model LandingProductModel
 @{
     Layout = "";
     var user = await UserManager.GetUserAsync(User);
@@ -152,7 +154,7 @@
     <header id="header" class="site-header header-scrolled position-fixed text-black bg-light">
         <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="#">
                     <h3>Kizspy <span class="badge badge-secondary">Kizspy</span></h3>
                 </a>
                 <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -162,7 +164,7 @@
                 </button>
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
                     <div class="offcanvas-header px-4 pb-0">
-                        <a class="navbar-brand" href="index.html">
+                        <a class="navbar-brand" href="#">
                             <h3>Kizspy <span class="badge badge-secondary">Kizspy</span></h3>
                         </a>
                         <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
@@ -339,96 +341,27 @@
                 </div>
                 <div class="swiper product-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item1.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                        @foreach(var item in Model.MobileProduct)
+                        {
+                            <div class="swiper-slide">
+                                <div class="product-card position-relative">
+                                    <div class="image-holder">
+                                        <img src="@item.Image" alt="product-item" class="img-fluid">
+                                    </div>
+                                    <div class="cart-concern position-absolute">
+                                        <div class="cart-button d-flex">
+                                            <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                                        <h3 class="card-title text-uppercase" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="@item.Name">
+                                            <a asp-action="login" asp-controller="Account" asp-area="Identity">@item.Name</a>
+                                        </h3>
+                                        <span class="item-price text-primary">@string.Format("{0:c0}", item.Price)</span>
                                     </div>
                                 </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 10</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$980</span>
-                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item2.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 11</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$1100</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item3.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 8</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$780</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item4.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 13</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$1500</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item5.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Iphone 12</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$1300</span>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -446,96 +379,27 @@
                 </div>
                 <div class="swiper product-watch-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item6.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                        @foreach(var item in Model.SmartWatchProduct)
+                        {
+                            <div class="swiper-slide">
+                                <div class="product-card position-relative">
+                                    <div class="image-holder">
+                                        <img src="@item.Image" alt="product-item" class="img-fluid">
+                                    </div>
+                                    <div class="cart-concern position-absolute">
+                                        <div class="cart-button d-flex">
+                                            <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                                        <h3 class="card-title text-uppercase" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="@item.Name">
+                                            <a asp-action="login" asp-controller="Account" asp-area="Identity">@item.Name</a>
+                                        </h3>
+                                        <span class="item-price text-primary">@string.Format("{0:c0}", item.Price)</span>
                                     </div>
                                 </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Pink watch</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$870</span>
-                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item7.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">Heavy watch</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$680</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item8.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">spotted watch</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$750</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item9.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">black watch</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$650</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="product-card position-relative">
-                                <div class="image-holder">
-                                    <img src="LandingPage/images/product-item10.jpg" alt="product-item" class="img-fluid">
-                                </div>
-                                <div class="cart-concern position-absolute">
-                                    <div class="cart-button d-flex">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity" class="btn btn-medium btn-black">Add to Cart<svg class="cart-outline"><use xlink:href="#cart-outline"></use></svg></a>
-                                    </div>
-                                </div>
-                                <div class="card-detail d-flex justify-content-between pt-3">
-                                    <h3 class="card-title text-uppercase">
-                                        <a asp-action="login" asp-controller="Account" asp-area="Identity">black watch</a>
-                                    </h3>
-                                    <span class="item-price text-primary">$750</span>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -929,5 +793,24 @@
     <script type="text/javascript" src="LandingPage/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="LandingPage/js/plugins.js"></script>
     <script type="text/javascript" src="LandingPage/js/script.js"></script>
+    <script>var hostUrl = "assets/";</script>
+    <!--begin::Javascript-->
+    <!--begin::Global Javascript Bundle(used by all pages)-->
+    <script src="assets/plugins/global/plugins.bundle.js"></script>
+    <script src="assets/js/scripts.bundle.js"></script>
+    <!--end::Global Javascript Bundle-->
+    <!--begin::Page Vendors Javascript(used by this page)-->
+    <script src="assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+    <!--end::Page Vendors Javascript-->
+    <!--begin::Page Custom Javascript(used by this page)-->
+    <script src="assets/js/custom/widgets.js"></script>
+    <script src="assets/js/custom/apps/chat/chat.js"></script>
+    <script src="assets/js/custom/modals/create-app.js"></script>
+    <script src="assets/js/custom/modals/upgrade-plan.js"></script>
+    <!--end::Page Custom Javascript-->
+    <!--end::Javascript-->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

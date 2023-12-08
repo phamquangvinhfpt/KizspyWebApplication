@@ -1,0 +1,185 @@
+﻿@using App.Models;
+@using KizspyWebApp.ViewModels
+@using Microsoft.AspNetCore.Identity;
+@model OrderDetailModel
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> userManager
+@inject KizspyDbContext _context
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	ViewData["Title"] = "Order";
+	Layout = "_Layout";
+	var user = await userManager.GetUserAsync(User);
+	string username = "";
+	string email = "";
+	string phone = "";
+	string address = "";
+	if (user != null)
+	{
+		username = user.UserName;
+		email = user.Email;
+		phone = user.PhoneNumber;
+		address = user.HomeAdress;
+	}
+}
+<div class="card">
+	<!--begin::Body-->
+	<div class="card-body p-lg-20">
+		<!--begin::Layout-->
+		<div class="d-flex flex-column flex-xl-row">
+			<!--begin::Content-->
+			<div class="flex-lg-row-fluid me-xl-18 mb-10 mb-xl-0">
+				<!--begin::Invoice 2 content-->
+				<div class="mt-n1">
+					<!--begin::Top-->
+					<div class="d-flex flex-stack pb-10">
+						<!--begin::Logo-->
+						<a href="#">
+							<img alt="Logo" src="/logo.jpg" width="50px" height="50px">
+						</a>
+						<!--end::Logo-->
+					</div>
+					<!--end::Top-->
+					<!--begin::Wrapper-->
+					<div class="m-0">
+						<!--begin::Label-->
+						<div class="fw-bolder fs-3 text-gray-800 mb-8">Invoice # @Model.Order.Id</div>
+						<!--end::Label-->
+						<!--begin::Row-->
+						<div class="row g-5 mb-11">
+							<!--end::Col-->
+							<div class="col-sm-6">
+								<!--end::Label-->
+								<div class="fw-bold fs-7 text-gray-600 mb-1">Create Date:</div>
+								<!--end::Label-->
+								<!--end::Col-->
+								<div class="fw-bolder fs-6 text-gray-800">@Model.Order.CreateTime.ToString("dd/MM/yyyy")</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Col-->
+							<!--end::Col-->
+							<div class="col-sm-6">
+								<!--end::Label-->
+								<div class="fw-bold fs-7 text-gray-600 mb-1">Status:</div>
+								<!--end::Label-->
+								<!--end::Info-->
+								<div class="fw-bolder fs-6 text-gray-800 d-flex align-items-center flex-wrap">
+									@if (Model.Order.Status)
+									{
+										<span class="badge badge-success">Approve</span>
+									}
+									else
+									{
+										<span class="badge badge-secondary">Pending</span>
+									}
+								</div>
+								<!--end::Info-->
+							</div>
+							<!--end::Col-->
+						</div>
+						<!--end::Row-->
+						<!--begin::Row-->
+						<div class="row g-5 mb-12">
+							<!--end::Col-->
+							<div class="col-sm-6">
+								<!--end::Label-->
+								<div class="fw-bold fs-7 text-gray-600 mb-1">User name:</div>
+								<!--end::Label-->
+								<!--end::Text-->
+								<div class="fw-bolder fs-6 text-gray-800">@username</div>
+								<!--end::Text-->
+							</div>
+							<!--end::Col-->
+							<!--end::Col-->
+							<div class="col-sm-6">
+								<!--end::Label-->
+								<div class="fw-bold fs-7 text-gray-600 mb-1">Email:</div>
+								<!--end::Label-->
+								<!--end::Text-->
+								<div class="fw-bolder fs-6 text-gray-800">@email</div>
+							</div>
+							<!--end::Col-->
+						</div>
+						<div class="row g-5 mb-12">
+							<!--end::Col-->
+							<div class="col-sm-6">
+								<!--end::Label-->
+								<div class="fw-bold fs-7 text-gray-600 mb-1">Phone:</div>
+								<!--end::Label-->
+								<!--end::Text-->
+								<div class="fw-bolder fs-6 text-gray-800">@phone</div>
+								<!--end::Text-->
+							</div>
+							<!--end::Col-->
+							<!--end::Col-->
+							<div class="col-sm-6">
+								<!--end::Label-->
+								<div class="fw-bold fs-7 text-gray-600 mb-1">Address:</div>
+								<!--end::Label-->
+								<!--end::Text-->
+								<div class="fw-bolder fs-6 text-gray-800">@address</div>
+							</div>
+							<!--end::Col-->
+						</div>
+						<!--end::Row-->
+						<!--begin::Content-->
+						<div class="flex-grow-1">
+							<!--begin::Table-->
+							<div class="table-responsive border-bottom mb-9">
+								<table class="table mb-3">
+									<thead>
+										<tr class="border-bottom fs-6 fw-bolder text-muted">
+											<th class="min-w-175px pb-2">ProductName</th>
+											<th class="min-w-70px text-end pb-2">Quantity</th>
+											<th class="min-w-80px text-end pb-2">Price</th>
+											<th class="min-w-100px text-end pb-2">Amount</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in Model.OrderDetails)
+                                        {
+                                            <tr class="border-bottom">
+                                                <td class="text-gray-800 fw-bolder">@item.ProductName</td>
+                                                <td class="text-end text-gray-800 fw-bolder">@item.Quantity</td>
+												<td class="text-end text-gray-800 fw-bolder">@string.Format("{0:c0}", item.Price)</td>
+												<td class="text-end text-gray-800 fw-bolder">@string.Format("{0:c0}", item.TotalPrice)</td>
+                                            </tr>
+                                        }
+									</tbody>
+								</table>
+							</div>
+							<!--end::Table-->
+							<!--begin::Container-->
+							<div class="d-flex justify-content-end">
+								<!--begin::Section-->
+								<div class="mw-300px">
+									<div class="d-flex flex-stack">
+										<!--begin::Code-->
+										<div class="fw-bold pe-10 text-gray-600 fs-7">Total</div>
+										<!--end::Code-->
+										<!--begin::Label-->
+										<div class="text-end fw-bolder fs-6 text-gray-800">@string.Format("{0:c0}", Model.Order.TotalPrice)</div>
+										<!--end::Label-->
+									</div>
+									<!--end::Item-->
+								</div>
+								<!--end::Section-->
+							</div>
+							<!--end::Container-->
+						</div>
+						<!--end::Content-->
+					</div>
+					<!--end::Wrapper-->
+				</div>
+				<!--end::Invoice 2 content-->
+			</div>
+			<!--end::Content-->
+			<!--begin::Sidebar-->
+			<!--end::Sidebar-->
+		</div>
+		<!--end::Layout-->
+	</div>
+	<!--end::Body-->
+</div>

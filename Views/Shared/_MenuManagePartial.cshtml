@@ -87,7 +87,10 @@ if (User.Identity.IsAuthenticated && role_name == null)
 			<a class="nav-link" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">My Profile</a>
 		</div>
 		<div class="menu-item px-5">
-			<a class="nav-link" asp-controller="Products" asp-action="Index" title="Manage">Product</a>
+			<a class="nav-link" asp-controller="Home" asp-action="Index" title="Manage">Product</a>
+		</div>
+		<div class="menu-item px-5">
+			<a class="nav-link" asp-controller="Order" asp-action="Index" title="Manage">Subcription</a>
 		</div>
 		<div class="menu-item px-5">
 			<form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">

@@ -155,6 +155,20 @@ namespace KizspyWebApp.ErrorHandling
 						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
 				RequestPath = new PathString("/Cart")
 			});
+
+			app.UseStaticFiles(new StaticFileOptions()
+			{
+				FileProvider = new PhysicalFileProvider(
+						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+				RequestPath = new PathString("/Order")
+			});
+
+			app.UseStaticFiles(new StaticFileOptions()
+			{
+				FileProvider = new PhysicalFileProvider(
+						Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+				RequestPath = new PathString("/Order/Detail")
+			});
 		}
 	}
 }

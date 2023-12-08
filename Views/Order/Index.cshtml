@@ -1,0 +1,42 @@
+﻿@using App.Models;
+@using KizspyWebApp.ViewModels
+@using Microsoft.AspNetCore.Identity;
+@model OrderModel
+@{
+    ViewData["Title"] = "Order";
+    Layout = "_Layout";
+}
+<div class="card">
+    <div class="card-body">
+        <table class="table table-row-dashed table-row-gray-300 gy-7">
+            <thead>
+                <tr class="fw-bolder fs-6 text-gray-800">
+                    <th>CreateTime</th>
+                    <th>TotalPrice</th>
+                    <th>Status</th>
+                    <th>Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Orders)
+                {
+                    <tr>
+                        <td>@item.CreateTime.ToString("dd/MM/yyyy")</td>
+                        <td>@string.Format("{0:c0}", item.TotalPrice)</td>
+                        <td>
+                            @if (item.Status)
+                            {
+                                <span class="badge badge-success">Approve</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-secondary">Pending</span>
+                            }
+                        </td>
+                        <td><a asp-action="Detail" asp-route-id="@item.Id">Detail</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -31,7 +31,12 @@ public class HomeController : Controller
     
     public IActionResult LandingPage()
     {
-        return View("Landing");
+        LandingProductModel model = new LandingProductModel();
+        //Get list model mobile product
+        model.MobileProduct = _context.Products.Where(x => x.Status == true && x.Categories.Any(c => c.CategoryName.Contains("Điện thoại"))).ToList();
+        //Get list model smart watch product
+        model.SmartWatchProduct = _context.Products.Where(x => x.Status == true && x.Categories.Any(c => c.CategoryName.Contains("Đồng hồ"))).ToList();
+        return View("Landing", model);
     }
 
     [HttpPost]

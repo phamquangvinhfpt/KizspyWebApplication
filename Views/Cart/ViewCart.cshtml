@@ -79,6 +79,7 @@
 									<!--begin::Table head-->
 									<thead>
 										<tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+											<th style="display:none"></th>
 											<th class="min-w-300px sorting_disabled" rowspan="1" colspan="1" style="width: 379.547px;">Product</th>
 											<th class="min-w-100px sorting_disabled" rowspan="1" colspan="1" style="width: 130.688px;">Qty</th>
 											<th class="min-w-150px sorting_disabled" rowspan="1" colspan="1" style="width: 193.516px;">Price</th>
@@ -91,6 +92,7 @@
                                         @foreach (var item in cartItems)
                                         {
                                             <tr>
+												<td style="display:none"><input type="hidden" value="@item.ProductId" id="product-id"/></td>
 												<td>@item.ProductName</td>
 												<td>
 													<input type="number" class="form-control form-control-sm form-control-solid" value="@item.Quantity" min="1" />
@@ -305,4 +307,44 @@
 			calculateTotal(); // Gọi hàm khi có thay đổi
 		});
 	});
+
+		// click vào kt_subscriptions_create_button
+	document.getElementById('kt_subscriptions_create_button').addEventListener('click', function (event) {
+        event.preventDefault();
+        //get product id, qty
+		var productIds = [];
+		var qtys = [];
+		//get total price from price
+		var price = document.getElementById('price').innerText;
+		//change price to decimal
+		price = price.replace(/\D/g, '');
+		document.querySelectorAll('.form-control-sm').forEach(el => {
+			productIds.push(el.parentNode.parentNode.querySelector('#product-id').value);
+			qtys.push(el.value);
+		});
+        console.log(productIds);
+		console.log(qtys);
+		console.log(price);
+		//call ajax
+        $.ajax({
+            url: '/CreateSubscription',
+            data: { productIds: productIds, qtys: qtys, total: price },
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.status == 200) {
+                    toastr.success(data.message);
+                    setTimeout(function () {
+                        window.location.href = '/Order/Detail/' + data.orderId;
+                    }, 2000);
+                } else {
+                    toastr.error(data.message);
+                }
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    });
 </script>
