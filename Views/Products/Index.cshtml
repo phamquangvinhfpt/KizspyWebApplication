@@ -6,11 +6,35 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> userManager
 @model IEnumerable<Product>
-
+@inject KizspyDbContext _context
 @{
     ViewData["Title"] = "Index";
+    var user = await userManager.GetUserAsync(User);
+    List<Product> products = new List<Product>();
+    List<CartItem> cartItems = new List<CartItem>();
+    Cart cart = null;
+    if (user != null)
+    {
+        //get cart
+        cart = _context.Carts.Where(x => x.AppUserId == user.Id).FirstOrDefault();
+        //get cart items
+        if (cart != null)
+        {
+            cartItems = _context.CartItems.Where(x => x.CartId == cart.Id).ToList();
+        }
+        //check cart items if product is deleted then remove it from cart
+        foreach (var item in cartItems)
+        {
+            var product = _context.Products.Where(x => x.Id == item.ProductId).FirstOrDefault();
+            if (product == null)
+            {
+                _context.CartItems.Remove(item);
+                _context.SaveChanges();
+            }
+        }
+    }
 }
-<link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
 <div class="card p-3">

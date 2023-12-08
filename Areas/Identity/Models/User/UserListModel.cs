@@ -15,7 +15,7 @@ namespace App.Areas.Identity.Models.UserViewModels
 
             public List<UserAndRole> users { get; set; }
         }
-
+        
         public class UserAndRole : AppUser
         {
             public string RoleNames { get; set; }

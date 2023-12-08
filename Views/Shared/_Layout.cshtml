@@ -1235,7 +1235,6 @@
 				url: '/GetCartCount',
 				type: 'GET',
 				success: function (data) {
-					console.log(data);
 					$('#cartCount').text(data.count);
 					$('#cartCount').removeClass('d-none');
 				}

@@ -29,6 +29,16 @@
         {
             cartItems = _context.CartItems.Where(x => x.CartId == cart.Id).ToList();
         }
+		//check cart items if product is deleted then remove it from cart
+		foreach (var item in cartItems)
+        {
+            var product = _context.Products.Where(x => x.Id == item.ProductId).FirstOrDefault();
+            if (product == null)
+            {
+                _context.CartItems.Remove(item);
+                _context.SaveChanges();
+            }
+        }
         //get products
         foreach (var item in cartItems)
         {
@@ -36,6 +46,7 @@
         }
     }
 }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="d-flex flex-column flex-lg-row">
 	<!--begin::Content-->
 	<div class="flex-lg-row-fluid me-lg-15 order-2 order-lg-1 mb-10 mb-lg-0">
@@ -67,14 +78,19 @@
 								<table class="table align-middle table-row-dashed fs-6 fw-bold gy-4 dataTable no-footer" id="kt_subscription_products_table">
 									<!--begin::Table head-->
 									<thead>
-										<tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0"><th class="min-w-300px sorting_disabled" rowspan="1" colspan="1" style="width: 379.547px;">Product</th><th class="min-w-100px sorting_disabled" rowspan="1" colspan="1" style="width: 130.688px;">Qty</th><th class="min-w-150px sorting_disabled" rowspan="1" colspan="1" style="width: 193.516px;">Price</th><th class="min-w-70px text-end sorting_disabled" rowspan="1" colspan="1" style="width: 90.5px;">Remove</th></tr>
+										<tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+											<th class="min-w-300px sorting_disabled" rowspan="1" colspan="1" style="width: 379.547px;">Product</th>
+											<th class="min-w-100px sorting_disabled" rowspan="1" colspan="1" style="width: 130.688px;">Qty</th>
+											<th class="min-w-150px sorting_disabled" rowspan="1" colspan="1" style="width: 193.516px;">Price</th>
+											<th class="min-w-70px text-end sorting_disabled" rowspan="1" colspan="1" style="width: 90.5px;">Remove</th>
+										</tr>
 									</thead>
 									<!--end::Table head-->
 									<!--begin::Table body-->
-									<tbody class="text-gray-600">
-										@foreach (var item in products)
-										{
-											<tr>
+                                    <tbody class="text-gray-600">
+                                        @foreach (var item in products)
+                                        {
+                                            <tr>
 												<td>@item.Name</td>
 												<td>
 													<input type="number" class="form-control form-control-sm form-control-solid" value="1" min="1" />
@@ -221,6 +237,7 @@
 <script>
 	function RemoveProductFromCart(event) {
         event.preventDefault();
+		var row = event.currentTarget.closest('tr');
 		var product_id = event.currentTarget.getAttribute('href').split('/').pop();
 		$.ajax({
 			url: '/RemoveProductFromCart',
@@ -228,8 +245,25 @@
 			type: 'POST',
 			dataType: 'json',
 			success: function (data) {
-				//reload page
-				location.reload();
+				row.remove();
+				calculateTotal();
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": false,
+					"progressBar": true,
+					"positionClass": "toast-top-right",
+					"preventDuplicates": false,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "5000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				};
+				toastr.success("Xóa sản phẩm thành công!");
 			},
 			error: function (data) {
 				console.log(data);

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using App.Models;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using KizspyWebApp.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace KizspyWebApp.Controllers;
 
@@ -32,11 +34,70 @@ public class HomeController : Controller
         return View("Landing");
     }
 
-    public IActionResult Index()
+    [HttpPost]
+    public async Task<IActionResult> GetFilteredProducts(Guid[] categoriesId)
+    {
+        var model = new ProductModel();
+        model.SelectedCategoryIds = categoriesId.ToList();
+        model.currentPage = 1;
+        var qr = _context.Products.Where(x => x.Status == true).OrderBy(p => p.Name);
+        if(categoriesId != null && categoriesId.Length > 0)
+        {
+            qr = (IOrderedQueryable<Product>)qr.Where(p => p.Categories.Any(c => categoriesId.Contains(c.Id)));
+        }
+        model.totalProducts = qr.Count();
+        model.countPages = (int)Math.Ceiling((double)model.totalProducts / model.ITEMS_PER_PAGE);
+        if (model.currentPage < 1)
+            model.currentPage = 1;
+        if (model.currentPage > model.countPages)
+            model.currentPage = model.countPages;
+        var qr1 = qr.Skip((model.currentPage - 1) * model.ITEMS_PER_PAGE).Take(model.ITEMS_PER_PAGE).Select(p => new Product
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Price = p.Price,
+            Qty = p.Qty,
+            Description = p.Description,
+            Image = p.Image,
+            Status = p.Status,
+            Categories = p.Categories
+        });
+        model.products = await qr1.ToListAsync();
+        return PartialView("_ProductList", model);
+    }
+
+    public async Task<IActionResult> Index([FromQuery(Name = "page")] int currentPage)
     {
         ViewBag.Categories = _context.Categories.ToList();
-        var products = _context.Products.Where(x => x.Status == true).ToList();
-        return View(products);
+        //var products = _context.Products.Where(x => x.Status == true).ToList();
+        var model = new ProductModel();
+        model.currentPage = currentPage;
+
+        var qr = _context.Products.Where(x => x.Status == true).OrderBy(p => p.Name);
+
+        model.totalProducts = await qr.CountAsync();
+		model.countPages = (int)Math.Ceiling((double)model.totalProducts / model.ITEMS_PER_PAGE);
+
+		if (model.currentPage < 1)
+			model.currentPage = 1;
+		if (model.currentPage > model.countPages)
+			model.currentPage = model.countPages;
+
+        var qr1 = qr.Skip((model.currentPage - 1) * model.ITEMS_PER_PAGE).Take(model.ITEMS_PER_PAGE)
+            .Select(p => new Product
+            {
+				Id = p.Id,
+				Name = p.Name,
+				Price = p.Price,
+				Qty = p.Qty,
+				Description = p.Description,
+				Image = p.Image,
+				Status = p.Status,
+				Categories = p.Categories
+			});
+
+        model.products = await qr1.ToListAsync();
+		return View(model);
     }
 
     public IActionResult Privacy()

@@ -1,0 +1,38 @@
+﻿@using App.Data;
+@using App.Models;
+@using KizspyWebApp.Models;
+@using KizspyWebApp.ViewModels;
+@model ProductModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@foreach (var item in Model.products)
+{
+    <div class="col-md-4 h-full">
+        <div class="card card-flush mb-4 box-shadow">
+            <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 200px; width: 100%; display: block;" src="@item.Image" data-holder-rendered="true">
+            <div class="card-body">
+                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h4 class="card-title text-uppercase" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" title="" data-kt-action="product_remove" data-bs-original-title="@item.Name">
+                        <span>@item.Name</span>
+                    </h4>
+                </div>
+                <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <span class="card-text text-uppercase">
+                        <span style="background: url(/16066101745881.gif)">@string.Format("{0:c0}", item.Price)</span>
+                    </span>
+                    <span>vnđ</span>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a asp-action="Details" asp-controller="Products" asp-route-Id="@item.Id" type="button" class="btn btn-sm badge badge-success">Detail</a>
+                    </div>
+                    <a href="@item.Id" onclick="AddCartItem(event)" type="button" class="btn btn-sm badge badge-danger">Add Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
